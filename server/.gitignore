@@ -1,0 +1,12 @@
+# dependencies
+/node_modules
+
+# rebuilt each run
+/public/codenames
+
+# certs
+cert.pem
+key.pem
+
+# mongoURL
+mongoURL.txt

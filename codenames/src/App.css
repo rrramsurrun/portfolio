@@ -1,0 +1,362 @@
+.headerbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.shareButton {
+  margin-left: 5px;
+}
+
+.shareButton:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+.clipboardnotice {
+  opacity: 50%;
+}
+
+.nameinput {
+  border-style: solid;
+  border-color: #282c34;
+  border-radius: 10px;
+
+  font-size: 1em;
+
+  height: 3em;
+  width: 30%;
+  margin: 2px;
+}
+.frontbutton {
+  border-style: solid;
+  border-color: #282c34;
+  border-radius: 10px;
+
+  font-size: 1em;
+
+  height: 3em;
+  width: 30%;
+  margin: 2px;
+}
+
+.frontbutton:hover {
+  opacity: 80%;
+  border-width: 1px;
+}
+.introbuttons {
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* align-items: ; */
+}
+
+.gamescreen {
+  display: flex;
+  flex-direction: row;
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 12;
+}
+
+.turnstable {
+  max-height: 50%;
+}
+
+.players {
+  /*Box containing player cards*/
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-basis: 15%;
+  flex-grow: 1;
+  margin: 1%;
+}
+
+.resetgamebutton {
+  background-color: #90ee90;
+  border-radius: 5px;
+  padding: 5px;
+  flex-grow: 1;
+  text-align: center;
+  margin: 0px 2px;
+}
+.resetgamebutton:hover {
+  cursor: pointer;
+}
+.resetresponses {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: row;
+}
+.players-red {
+  background-color: #c41e3a;
+}
+.players-blue {
+  background-color: #6699cc;
+}
+.playercard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playerdetails {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+.playerdetails-plain {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.exitbutton {
+  margin: 10px;
+  min-width: 13%;
+  max-width: 13%;
+  height: 100%;
+}
+.exitbutton:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+.leavegamebox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  height: 100%;
+  min-width: 39%;
+  max-width: 39%;
+}
+.confirmexitbutton {
+  width: 34%;
+  height: 100%;
+}
+.leavegamemsg {
+  color: white;
+  width: 66%;
+  height: 100%;
+}
+.confirmexitbutton:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+
+.playercard-red {
+  background-color: #c41e3a;
+  border-radius: 3px;
+}
+.playercard-blue {
+  background-color: #6699cc;
+  border-radius: 3px;
+}
+.playercard-turn {
+  /* box-shadow: 2px 2px white; alternative option*/
+  border-style: outset;
+  border-color: antiquewhite;
+  border-radius: 3px;
+  margin: 2px;
+}
+
+.playertitle {
+  text-transform: capitalize;
+  font-size: 1.1em;
+  margin: 5px;
+}
+.playertitle-red {
+  color: lightsalmon;
+}
+.playertitle-blue {
+  color: cyan;
+}
+.playername {
+  color: white;
+  margin: 5px;
+}
+.waitbox {
+  display: flex;
+  justify-content: center;
+  font-size: 1.1em;
+}
+.winbox {
+  display: flex;
+  justify-content: center;
+  font-size: 3em;
+}
+.winbox-red {
+  color: #c41e3a;
+}
+.winbox-blue {
+  color: #6699cc;
+}
+.cluecounter {
+  color: aliceblue;
+  margin: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-shadow: 0.5px 0.5px 2px;
+}
+
+.lastcluebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.clueInput {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  margin-top: 10px;
+}
+.clueInputBox {
+  font-size: 1.1em;
+  border-radius: 5px;
+  margin-top: 4px;
+}
+.clueInputSpacer {
+  font-size: 1.1em;
+}
+.clueCountDD {
+  font-size: 1.1em;
+  height: 2.2em;
+}
+.clueInputSubmit {
+  font-size: 0.9em;
+  height: 2.2em;
+  margin-left: 5px;
+}
+
+.wordsrow {
+  display: flex;
+  justify-content: space-evenly;
+  /* flex-direction: row; */
+  /* padding: 5px; */
+  margin: 2px;
+}
+.wordcard {
+  display: inline-block;
+  font-size: 1em;
+  border-radius: 10px;
+  justify-content: center;
+  height: 3em;
+  width: 100%;
+  margin: 2px;
+  border-style: none;
+}
+
+.wordcard--red {
+  background-color: #c41e3a;
+  color: white;
+}
+.wordcard--blue {
+  background-color: #6699cc;
+  color: white;
+}
+.wordcard--cream {
+  background-color: rgb(245, 232, 160);
+}
+.wordcard--black {
+  color: aliceblue;
+  background-color: hsla(240, 8%, 3%, 0.781);
+}
+.wordcard--end {
+  opacity: 60%;
+}
+.select-player-row {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  width: 300px;
+  display: flex;
+
+  border-radius: 5px;
+  margin: 20px;
+  /* relative to siblings */
+  flex-basis: 15%;
+}
+
+.selected {
+  opacity: 50%;
+}
+
+.userroles {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 30%;
+}
+.select-player-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 2px;
+}
+.usercard {
+  width: 100%;
+  height: 3em;
+  margin: 2px;
+  font-size: 1.1em;
+}
+.select-player-red {
+  color: lightsalmon;
+  background-color: #c41e3a;
+  border-radius: 3px;
+}
+.select-player-blue {
+  color: cyan;
+  background-color: #6699cc;
+  border-radius: 3px;
+}
+
+.cluecount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: antiquewhite;
+  padding: 0.5em;
+  border-radius: 50%;
+  height: 1em;
+  width: 1em;
+  font-weight: bold;
+}
+.guess {
+  /* border-style: solid; */
+  display: flex;
+  border-radius: 3px;
+  font-size: 1em;
+  width: fit-content;
+  padding: 0.5em 1em;
+  /* margin: 5px; */
+}
+.guesses {
+  display: flex;
+  justify-items: start;
+  gap: 3px;
+}
+.guess--last {
+  border-color: rgb(212, 212, 212);
+  background-color: rgb(228, 227, 227);
+}
+.guess--red {
+  border-color: hsla(5, 81%, 71%, 0.781);
+  background-color: hsla(5, 81%, 71%, 0.781);
+}
+.guess--blue {
+  background-color: hsla(209, 81%, 71%, 0.781);
+  border-color: hsla(209, 81%, 71%, 0.781);
+}
+.guess--cream {
+  background-color: hsla(51, 80%, 90%, 1);
+  border-color: hsla(51, 80%, 90%, 1);
+}
+.guess--black {
+  color: aliceblue;
+  background-color: hsla(240, 8%, 3%, 0.781);
+  border-color: hsla(240, 8%, 3%, 0.781);
+}
