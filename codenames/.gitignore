@@ -8,6 +8,11 @@
 # testing
 /coverage
 
+#create-react-app gubbins
+/src/reportWebVitals.js
+/src/setupTests.js
+
+
 # production
 /build
 

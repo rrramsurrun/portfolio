@@ -4,7 +4,7 @@ const https = require("https");
 
 const app = require("./app");
 
-const { codenamesserver } = require("./codenames");
+const { codenamesserver } = require("./codenames/codenames");
 
 const PORT = process.env.PORT || 443;
 

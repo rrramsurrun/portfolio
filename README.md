@@ -1,9 +1,13 @@
-# A first-level heading
+# Robin's Portfolio Repository
 
-## A second-level heading
+Welcome to my repository. This repository contains all the code used to run my [portfolio website](https://ramsurrun-portfolio.com/).
 
-### A third-level heading
+## Projects
 
-**_All this text is important_**
-**This is bold text**
-_This text is italicized_
+### Codenames
+
+The following folders contain the code required to run the codenames application.
+
+**codenames/src** - _This folder contains all the code required to run/build the front-end react application_
+
+**server/src/codenames** - _This folder contains all the code required to run the back-end Express & SocketIO API. Note that the MongoDB URI and security certificates have been removed._
