@@ -60,7 +60,7 @@ class Game {
     this.revealed = new Array(25).fill("");
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
-    this.turn = 0; //In build: Math.random() < 0.5 ? 0 : 2;
+    this.turn = Math.random() < 0.5 ? 0 : 2;
     this.firstTurn = this.turn === 0 ? "red" : "blue";
     this.turnNo = 0;
     //Array of 1:many arrays - [[clue1, [guess1,guess2,...]],...]
@@ -174,7 +174,7 @@ class Game {
   }
   endTurn(userId) {
     if (this.userIds.indexOf(userId) === this.turn) {
-      this.turn = (this.turn + 1) % 2; //In build: this.turn = (this.turn + 1) % 4;
+      this.turn = (this.turn + 1) % 4;
       return true;
     } else {
       return false;

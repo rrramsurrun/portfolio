@@ -41,12 +41,12 @@ app.get("/codenames", (req, res) => {
   );
 });
 
-app.get("/projects/newproject", (req, res) => {
-  res.redirect("/about");
-});
+// app.get("/projects/newproject", (req, res) => {
+//   res.redirect("/about");
+// });
 
-app.get("/contact", (req, res) => {
-  res.render("pages/contact");
-});
+// app.get("/contact", (req, res) => {
+//   res.render("pages/contact");
+// });
 
 module.exports = app;

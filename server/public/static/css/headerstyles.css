@@ -66,11 +66,12 @@
   position: absolute;
   z-index: 999;
   display: block;
-  left: -100vw;
+  left: -130vw;
   border: 1px solid #8c8c8c;
-  background-color: #a5adad;
-  padding: 6px 0;
-  margin: 0;
+  background-color: #89746f;
+  padding: 3px;
+  margin-left: 13px;
+  margin-top: 0px;
   list-style: none;
   width: 100%;
   border-radius: 3px;
@@ -84,7 +85,7 @@
 }
 .nav__link > ul a:hover,
 .nav__link > ul a:focus {
-  background: #ececec;
+  background: #f5b557;
 }
 .nav__link > input[type="checkbox"]:checked ~ ul,
 .nav__link > ul:target {

@@ -49,6 +49,10 @@ body {
   font-size: 30px;
   max-width: 750px;
 }
+.hero__content__links {
+  display: flex;
+  flex-direction: row;
+}
 @media screen and (max-width: 700px) {
   .hero {
     background-image: url("../media/background\ grid.jpg");
@@ -81,6 +85,9 @@ body {
   background-color: #f5f2f2;
   opacity: 100%;
   /* background-color: rgb(202, 67, 148); */
+}
+.page-body_project {
+  padding: 10px 50px;
 }
 
 .page-body__intro {
@@ -173,21 +180,25 @@ body {
 }
 
 .project-image-container {
-  width: 250px;
-  height: 200px;
-  background-color: #f5b557;
+  max-width: 250px;
+  max-height: 200px;
   border-radius: 5px;
+  /* background-color: red; */
 }
 .project-image {
-  object-fit: contain;
+  max-width: 250px;
+  max-height: 200px;
+  object-fit: fill;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
+
 .project-details-container {
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+  /* background-color: aqua; */
 }
 .project-name {
   font-size: 30px;
@@ -195,22 +206,88 @@ body {
 }
 .project-description {
   font-size: 20px;
-
   /* font-weight: bold; */
+}
+.project-summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  border-radius: 7px;
+}
+.project-summary__image-container {
+  max-width: 350px;
+  max-height: 300px;
+}
+.project-image_codenames {
+  max-width: 350px;
+  max-height: 300px;
+  padding: 0px 10px;
+}
+.project-summary__intro {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  padding: 10px;
+}
+.project-details {
+  margin-top: 20px;
+}
+.project-details__header {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.project-details__subheader {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+.project-details__subheader-intro {
+  font-style: italic;
+  font-size: 0.8em;
+}
+.project-details__answer {
+  margin-bottom: 10px;
+}
+.bold-italic-span {
+  font-weight: bold;
+  font-style: italic;
+}
+.further-development-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px;
+  background-color: #89746f;
+  border-radius: 7px;
+  color: white;
+}
+.further-development__subheader {
+  font-weight: bold;
+  font-size: 1.3em;
+}
+.further-development-image {
+  margin-top: 5px;
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 5px;
+}
+
+.project-summary_development {
+  background-color: #89746f;
 }
 
 a:link {
   text-decoration: none;
 }
-
 a:visited {
   text-decoration: none;
 }
-
 a:hover {
   text-decoration: none;
 }
-
 a:active {
   text-decoration: none;
 }

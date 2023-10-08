@@ -14,18 +14,96 @@
             <h2 class="hero__content__name-desc">October 2023</h2>
             <h2 class="hero__content__desc">This is an online version of Codenames that can be played by 4 remote
               players</h2>
-            <div class="hero__content__links"> <a href="https://github.com/rrramsurrun" target="_blank"><img
-                  class="robin-card__links__link" src="../../static/icons/github.png"></a></div>
+            <div class="hero__content__links"> <a href="https://github.com/rrramsurrun/portfolio#codenames"
+                target="_blank"><img class="robin-card__links__link" src="../../static/icons/github.png"></a>
+              <a href="/codenames" target="_blank"><span class="robin-card__links__text-link">PLAY!</span></a>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="page-body page-body_project">
+          <div class="project-details__header">Project Summary</div>
+          <div class="project-summary">
+            <div class="project-summary__image-container">
+              <a href="/codenames" target="_blank">
+                <img class="project-image_codenames" src="../../static/media/Sample-codenames.jpg"></a>
+            </div>
+            <div class="project-summary__intro">
 
+              <div class="project-details__subheader">What is Codenames?</div>
+              <div class="project-details__answer">Codenames is a 4-player competitive game where a
+                <span class="bold-italic-span">Spymaster</span>
+                must give one-word clues to their
+                <span class="bold-italic-span">Agent</span>
+                to reveal which of the 25 words on the game board belong to
+                their team while avoiding the other team's words. The game combines lateral word association and taking
+                the perspective of your teammate. This project is an online version of Codenames that allows 4 remote
+                players to play
+                together.
+              </div>
+              <div class="project-details__answer">Here is a <a class="inline-link"
+                  href="https://www.youtube.com/watch?v=zQVHkl8oQEU&t=1s" target="_blank"><span>3
+                    minute video</span></a> or a <a class="inline-link"
+                  href="https://www.youtube.com/watch?v=J8RWBooJivg&t=1s" target="_blank"><span>10 minute
+                    video</span></a> on
+                how
+                to play the game</div>
+              <div class="project-details__subheader">Project architecture</div>
+              <div class="project-details__answer">A MERN stack application hosted on an AWS EC2 instance that
+                utilises SocketIO to create a real-time game, using Docker to manage deployment.
+              </div>
+              <div class="project-details__answer">I undertook this project to test and demonstrate my ability to
+                publish a complete web
+                application that can
+                be accessed across the web.
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="page-body">
-          <div class="page-body__intro">
-            <span>Project description and breakdown</span>
+          <div class="project-details">
+            <div class="project-details__subheader">How did I develop this application?</div>
+            <div class="project-details__answer">The development process was to first build out the majority of the
+              backend API and use Postman to test in the local and deployed EC2 server environment, then to build a
+              simple react application front-end to verify the bare full-stack architecture was functional.
+              Following this, the complete React front-end was built along with a few outstanding backend features.
+            </div>
+            <div class="project-details__answer">I started with the backend API and its deployment as the configuration
+              and management of a deployed web server was the aspect of the project I was least familiar with. Though I
+              understood the theory behind a web server and a full-stack application there were steps to the process I
+              was unclear on how to achieve. I invested more time than intended in configuring an environment from
+              scratch several times before taking the time to learn how to use Docker to manage the initial and ongoing
+              deployment.</div>
+            <div class="project-details__answer">If I were to undertake a similar project the lessons I have learnt in
+              deployment would significantly shorten development time. I would also develop more of the front-end
+              earlier in the process as building the React application revealed some changes that were required on the
+              back-end. Though this is inevitable to some degree, my development process felt more interleaved than was
+              ideal.</div>
+            <div class="project-details__answer">Building this project brought together many aspects of my software
+              engineering skillset and producing a game I love in the virtual space was very satisfying.</div>
           </div>
-          <iframe width="420" height="315" src="https://www.youtube.com/embed/J8RWBooJivg">
-          </iframe>
+          <div class="further-development-container">
+            <div class="further-development__subheader">Further development</div>
+            <div class="project-details__subheader-intro">Major developments after publishing</div>
+            <div class="project-summary project-summary_development">
+              <div class="project-summary__image-container">
+                <a href="/codenames" target="_blank">
+                  <img class="further-development-image" src="../../static/media/assassin-friends.jpg"></a>
+              </div>
+              <div class="project-summary__intro">
+                <div class="project-details__subheader">2-player cooperative</div>
+                <div class="project-details__answer"> There is a two-player cooperative version of Codenames that
+                  utilises
+                  the same game board with each player having a unique codex that partially overlaps with the other
+                  player's. Incorporating this feature, and the ease with which I can do so, will be a good measure of
+                  how extendable my code is. </div>
+                <div class="project-details__subheader-intro">Scheduled for November 2023</div>
+              </div>
+
+            </div>
+          </div>
+
+
+
         </div>
-        </div>
+
       </main>
   </body>
