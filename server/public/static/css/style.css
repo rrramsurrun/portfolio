@@ -34,45 +34,23 @@ body {
   padding-left: 35px;
 }
 .hero__content__name {
-  font-size: 60px;
+  font-size: 4em;
   margin-bottom: 0px;
   width: 600px;
 }
-.hero__content__name-desc {
-  font-size: 30px;
-  margin-bottom: 0px;
-  width: 600px;
-  font-style: italic;
-}
+
 .hero__content__desc {
   margin-top: 0px;
-  font-size: 30px;
+  font-size: 1.9em;
   max-width: 750px;
 }
 .hero__content__links {
   display: flex;
   flex-direction: row;
 }
-@media screen and (max-width: 700px) {
-  .hero {
-    background-image: url("../media/background\ grid.jpg");
-    background-size: 10px;
-    background-position: 0 0;
-    background-repeat: repeat;
-  }
-  .hero__content__name {
-    font-size: 48px;
-    width: 400px;
-  }
-  .hero__content__desc {
-    font-size: 24px;
-    max-width: 600px;
-  }
-}
 
 .page-body {
   position: relative;
-  /* left: 0; */
   display: flex;
   flex-direction: column;
 
@@ -84,7 +62,6 @@ body {
   z-index: 9;
   background-color: #f5f2f2;
   opacity: 100%;
-  /* background-color: rgb(202, 67, 148); */
 }
 .page-body_project {
   padding: 10px 50px;
@@ -93,17 +70,25 @@ body {
 .page-body__intro {
   display: flex;
   flex-direction: row;
-  /* background-color: aqua; */
 }
-@media screen and (max-width: 700px) {
+@media screen {
   .page-body__intro {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* background-color: red; */
+  }
+}
+@media screen and (min-width: 1000px) {
+  .page-body__intro {
+    display: flex;
+    flex-direction: row;
+    align-items: normal;
+    /* background-color: aqua; */
   }
 }
 .page-body__intro__robin-card {
-  margin: 20px;
+  margin: 10px;
   margin-top: 0px;
   display: flex;
   flex-direction: column;
@@ -112,13 +97,14 @@ body {
 
   border-radius: 3px;
 
-  min-width: 350px;
-  width: 350px;
+  min-width: 500px;
+  width: 500px;
+  height: 500px;
   /* background-color: rgb(202, 67, 148); */
 }
 
 .robin-card__image {
-  height: 256px;
+  height: 100%;
   width: 100%;
   object-fit: cover;
 }
@@ -129,39 +115,47 @@ body {
   align-items: center;
   background-color: #f5b557;
 }
+.robin-card__details__text {
+  font-size: 1.5em;
+}
+.robin-card__details__text-italic {
+  font-style: italic;
+}
 .robin-card__links {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 .robin-card__links__link {
-  height: 20px;
-  margin: 2px 10px;
+  height: 2em;
+  margin: 5px 10px;
 }
-.robin-card__links__name {
-  height: 20px;
+@media screen and (min-width: 1000px) {
+  .page-body__intro__robin-card {
+    min-width: 400px;
+    width: 400px;
+    height: 400px;
+    margin-right: 0px;
+  }
+  .robin-card__details__text {
+    font-size: 1em;
+  }
+  .robin-card__links__link {
+    height: 1.5em;
+  }
 }
-.robin-card__links__email {
-  height: 20px;
-}
+
 .page-body__intro__robin-desc {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-evenly;
   padding-left: 50px;
 }
-@media screen and (max-width: 700px) {
-  .page-body__intro__robin-desc {
-    padding-left: 0px;
-    gap: 5px;
-  }
-}
 .robin-desc {
-  font-size: 20px;
+  font-size: 1.2em;
+  margin: 10px 0px;
 }
 .robin-desc_bold {
-  font-size: 20px;
   font-weight: bold;
 }
 
@@ -197,15 +191,19 @@ body {
 .project-details-container {
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  margin-left: 1.5em;
   /* background-color: aqua; */
 }
 .project-name {
-  font-size: 30px;
+  font-size: 2em;
   font-weight: bold;
 }
+.project-published {
+  font-size: 1.2em;
+  font-style: italic;
+}
 .project-description {
-  font-size: 20px;
+  font-size: 1.5em;
   /* font-weight: bold; */
 }
 .project-summary {
@@ -233,6 +231,7 @@ body {
 }
 .project-details {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 .project-details__header {
   font-size: 2em;

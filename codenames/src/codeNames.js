@@ -212,7 +212,9 @@ const CodeNames = ({ mysocket, game }) => {
   const waitBox = () => {
     return (
       <div className="waitbox">{`Waiting for a clue from ${
-        game.nicknames[game.turn]
+        game.nicknames[game.turn] && game.turn === 0
+          ? "Red Spymaster"
+          : "Blue Spymaster"
       }`}</div>
     );
   };
@@ -276,7 +278,7 @@ const CodeNames = ({ mysocket, game }) => {
   const clipboardFunction = () => {
     const URL =
       process.env.NODE_ENV === "production"
-        ? "https://ramsurrun-portfolio.com/projects/codenames/?roomname="
+        ? "https://ramsurrun-portfolio.com/codenames/?roomname="
         : "localhost:3000/?roomname=";
     navigator.clipboard.writeText(`${URL}${game.room}`);
     setclipboardNote(true);

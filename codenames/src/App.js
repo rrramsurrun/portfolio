@@ -19,7 +19,6 @@ function App(args) {
       return;
     }
     if (localStorage.getItem("codenamesUserId") !== null) {
-      console.log(localStorage.getItem("codenamesUserId"));
       mysocket.rejoinGame(localStorage.getItem("codenamesUserId"));
     }
 
@@ -78,7 +77,7 @@ function App(args) {
         localStorage.removeItem("codenamesUserId");
         setgame(null);
         setGamestatus("frontpage");
-        window.location.href = "/";
+        // window.location.href = "/";
       } else {
         seterrormsg("Leave game failed, please try again");
       }
@@ -94,9 +93,6 @@ function App(args) {
     mysocket.on("errormsg", (msg) => {
       if (msg.startsWith("Could not find")) {
         localStorage.removeItem("codenamesUserId");
-        // if (args.gameRoom !== null) {
-        //   window.location.href = "/";
-        // }
       }
       console.log(msg);
       seterrormsg(msg);
