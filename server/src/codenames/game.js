@@ -174,6 +174,7 @@ class Game {
       header: "playerData",
       nicknames: this.nicknames,
       room: this.room,
+      playercount: this.playercount,
     });
   }
   endTurn(userId) {
