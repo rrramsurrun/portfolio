@@ -7,11 +7,13 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
 
   const [tempnickname, settempnickname] = useState("");
   const [temprole, settemprole] = useState("");
+  const [playercount, setplayercount] = useState(4);
 
   const submitRequest = () => {
     switch (requestType) {
       case "newGame":
-        mysocket.newGame(temprole, tempnickname);
+        console.log(`Passing ${playercount} to mysocket.newGame`);
+        mysocket.newGame(temprole, tempnickname, playercount);
         break;
       case "joinGame":
         mysocket.joinGame(foundgame.room, temprole, tempnickname);
@@ -179,6 +181,24 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
   //before user has selected create vs join
   return (
     <div className="introbuttons">
+      <div className="introbuttons__row">
+        <button
+          className={`frontbutton ${
+            playercount === 4 ? "frontbutton--red" : ""
+          }`}
+          onClick={() => setplayercount(4)}
+        >
+          4-player
+        </button>
+        <button
+          className={`frontbutton ${
+            playercount === 2 ? "frontbutton--green" : ""
+          }`}
+          onClick={() => setplayercount(2)}
+        >
+          2-player
+        </button>
+      </div>
       <button className="frontbutton" onClick={() => setrequestType("newGame")}>
         New Game
       </button>

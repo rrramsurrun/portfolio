@@ -18,6 +18,7 @@ const codenamesGameSchema = new mongoose.Schema(
     room: String,
     userIds: [String],
     nicknames: [String],
+    playercount: Number,
 
     revealed: [],
     resetGameSurvey: [Boolean],

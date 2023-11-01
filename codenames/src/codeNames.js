@@ -283,6 +283,18 @@ const CodeNames = ({ mysocket, game }) => {
     navigator.clipboard.writeText(`${URL}${game.room}`);
     setclipboardNote(true);
   };
+
+  const playersBox = (colour) => {
+    return (
+      <div className="players">
+        <div className={`players-${colour}`}>
+          {playerCard(0, colour)}
+          {playerCard(1, colour)}
+          {cluecountCard(colour)}
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <div className="headerbox">
@@ -296,13 +308,7 @@ const CodeNames = ({ mysocket, game }) => {
         </div>
       </div>
       <div className="gamescreen">
-        <div className="players">
-          <div className="players-red">
-            {playerCard(0, "red")}
-            {playerCard(1, "red")}
-            {cluecountCard("red")}
-          </div>
-        </div>
+        {playersBox("red")}
 
         <div className="cards">
           {[...Array(5).keys()].map((e) => (
@@ -378,15 +384,9 @@ const CodeNames = ({ mysocket, game }) => {
               </TableBody>
             </Table>
           </TableContainer>
-        </div>
-        <div className="players">
-          <div className="players-blue">
-            {playerCard(2, "blue")}
-            {playerCard(3, "blue")}
-            {cluecountCard("blue")}
-          </div>
           {resetGameButton()}
         </div>
+        {playersBox("blue")}
       </div>
     </div>
   );

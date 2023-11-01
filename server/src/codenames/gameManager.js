@@ -2,7 +2,7 @@
 const { newGame, loadGame } = require("./game");
 
 async function createGame(io, socket, args) {
-  const game = await newGame();
+  const game = await newGame(args.playercount);
   if (!game) {
     socket.emit("errormsg", "Could not create game");
     return;
@@ -304,7 +304,7 @@ function manageGame(io, socket) {
 function keyCheck(requestType, socket, args) {
   const keysMap = new Map();
   keysMap
-    .set("newGame", ["role", "nickname"])
+    .set("newGame", ["role", "nickname", "playercount"])
     .set("findGame", ["room"])
     .set("joinGame", ["room", "role", "nickname"])
     .set("rejoinGame", ["userId"])

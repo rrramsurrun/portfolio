@@ -19,8 +19,12 @@ class SocketHandler extends socketIO {
     this.emit(requestType, args);
   };
 
-  newGame = function (role, nickname) {
-    this.decorativeEmit("newGame", { role: role, nickname: nickname });
+  newGame = function (role, nickname, playercount) {
+    this.decorativeEmit("newGame", {
+      role: role,
+      nickname: nickname,
+      playercount: playercount,
+    });
   };
 
   findGame = function (room) {

@@ -110,7 +110,8 @@ function App(args) {
   return (
     <div>
       <div className="App">
-        <header className="App-header">
+        <header className="App-header"></header>
+        <div className="App-body">
           {gamestatus === "playgame" || gamestatus === "resetgame" ? (
             <Codenames mysocket={mysocket} game={game} />
           ) : (
@@ -121,7 +122,7 @@ function App(args) {
               errormsg={errormsg}
             />
           )}
-        </header>
+        </div>
       </div>
     </div>
   );

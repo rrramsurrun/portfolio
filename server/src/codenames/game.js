@@ -8,8 +8,8 @@ const {
 } = require("./gameDatabase");
 const { randomUUID } = require("crypto");
 
-async function newGame() {
-  const game = new Game();
+async function newGame(playercount) {
+  const game = new Game(playercount);
   //request words and generate codex
   await game.resetGameboard(true);
   if (await game.newGameUpload()) {
@@ -43,8 +43,8 @@ class Game {
     deleteGameDB(this);
   }
 
-  constructor() {
-    //Never reset
+  constructor(playercount) {
+    //Doesn't reset between games
     this.room = null;
     //Values which are reset individually
     this.userIds = Array(4);
@@ -54,6 +54,8 @@ class Game {
     //reset with resetGameboard
     this.words = [];
     this.codex = {};
+    //add playercount
+    this.playercount = playercount;
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]
@@ -122,9 +124,11 @@ class Game {
   gameJoinData(id) {
     //provide user-specific data and game board
     //these will only change between games
+
     return JSON.stringify({
       header: "gameJoinData",
       room: this.room,
+      playercount: this.playercount,
       userId: this.userIds.filter((i) => i == id)[0],
       role: this.userIds.indexOf(id),
       words: this.words,
