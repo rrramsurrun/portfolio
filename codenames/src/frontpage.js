@@ -12,7 +12,6 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
   const submitRequest = () => {
     switch (requestType) {
       case "newGame":
-        console.log(`Passing ${playercount} to mysocket.newGame`);
         mysocket.newGame(temprole, tempnickname, playercount);
         break;
       case "joinGame":
@@ -59,17 +58,24 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
       </div>
     );
   };
-
-  if (gamestatus === "selectrole") {
-    const nicknames = foundgame.nicknames;
-    return (
-      <div className="introbuttons">
-        <input
-          className="nameinput"
-          placeholder="Username"
-          onChange={(e) => settempnickname(e.target.value)}
-          key="nameinput"
-        />
+  const userRoles = (nicknames, pc) => {
+    if (nicknames) {
+      if (pc === 2) {
+        return (
+          <div className="userroles">
+            <div className="select-player-column">
+              {nicknames[0] !== null
+                ? selectedPlayer(nicknames[0], "green", "Your co-conspirator")
+                : ""}
+              {nicknames[1] !== null
+                ? selectedPlayer(nicknames[1], "green", "Your co-conspirator")
+                : ""}
+            </div>
+          </div>
+        );
+      }
+      //Otherwise pc===4
+      return (
         <div className="userroles">
           <div className="select-player-column">
             {nicknames[0] !== null
@@ -88,11 +94,43 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
               : selectPlayer("blue", "Operative")}
           </div>
         </div>
+      );
+    }
+
+    if (pc === 4) {
+      return (
+        <div className="userroles">
+          <div className="select-player-column">
+            {selectPlayer("red", "Spymaster")}
+            {selectPlayer("red", "Operative")}
+          </div>
+          <div className="select-player-column">
+            {selectPlayer("blue", "Spymaster")}
+            {selectPlayer("blue", "Operative")}
+          </div>
+        </div>
+      );
+    }
+  };
+
+  if (gamestatus === "selectrole") {
+    return (
+      <div className="introbuttons">
+        <input
+          className="nameinput"
+          placeholder="Username"
+          onChange={(e) => settempnickname(e.target.value)}
+          key="nameinput"
+        />
+        {userRoles(foundgame.nicknames, foundgame.playercount)}
 
         <button
           type="button"
           className="frontbutton"
-          disabled={tempnickname === "" || temprole === ""}
+          disabled={
+            tempnickname === "" ||
+            (temprole === "" && foundgame.playercount === 4)
+          }
           onClick={submitRequest}
         >
           Join Game
@@ -116,28 +154,26 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
           placeholder="Username"
           onChange={(e) => settempnickname(e.target.value)}
         />
-
-        <div className="userroles">
-          <div className="select-player-column">
-            {selectPlayer("red", "Spymaster")}
-            {selectPlayer("red", "Operative")}
-          </div>
-          <div className="select-player-column">
-            {selectPlayer("blue", "Spymaster")}
-            {selectPlayer("blue", "Operative")}
-          </div>
-        </div>
+        {userRoles(false, playercount)}
 
         <button
           className="frontbutton"
           type="button"
-          disabled={tempnickname === "" || temprole === ""}
+          disabled={
+            tempnickname === "" || (temprole === "" && playercount === 4)
+          }
           onClick={submitRequest}
         >
-          Create game with these details
+          {`Create ${playercount}-player game with these details`}
         </button>
 
         {errormsg ? <div>{errormsg}</div> : ""}
+        <button
+          className="frontbutton"
+          onClick={() => setplayercount(playercount === 4 ? 2 : 4)}
+        >
+          {`Switch to ${playercount === 4 ? 2 : 4}-player game`}
+        </button>
         <button
           className="frontbutton"
           onClick={() => setrequestType("findGame")}

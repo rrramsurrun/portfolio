@@ -10,3 +10,6 @@ key.pem
 
 # mongoURL
 mongoURL.txt
+
+#development notes
+devnotes.txt

@@ -81,6 +81,42 @@
   max-height: 50%;
 }
 
+.codex-guide {
+  margin: 10px;
+}
+.codex-guide__row {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.codex-guide__cell-start {
+  height: 20px;
+  width: 250px;
+  margin: 2px;
+  text-align: end;
+}
+.codex-guide__cell {
+  height: 20px;
+  width: 20px;
+  margin: 2px;
+  border-radius: 3px;
+  text-align: center;
+}
+.codex-guide__cell--middle {
+  height: 10px;
+  margin: 0 2px;
+}
+.codex-guide__cell--green {
+  background-color: #90ee90;
+}
+.codex-guide__cell--cream {
+  background-color: rgb(245, 232, 160);
+}
+.codex-guide__cell--black {
+  background-color: hsla(240, 8%, 3%, 0.781);
+}
+
 .players {
   /*Box containing player cards*/
   display: flex;
@@ -189,6 +225,9 @@
 }
 .playertitle-blue {
   color: cyan;
+}
+.playertitle-green {
+  color: darkgreen;
 }
 .playername {
   color: white;

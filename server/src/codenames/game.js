@@ -44,25 +44,27 @@ class Game {
   }
 
   constructor(playercount) {
+    //Playercount is always 4 or 2
+    //add playercount
+    this.playercount = playercount;
     //Doesn't reset between games
     this.room = null;
     //Values which are reset individually
-    this.userIds = Array(4);
-    this.nicknames = Array(4);
+    this.userIds = Array(playercount);
+    this.nicknames = Array(playercount);
     //Values that are reset with a new game
     this.resetGamestate();
     //reset with resetGameboard
     this.words = [];
     this.codex = {};
-    //add playercount
-    this.playercount = playercount;
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]
     this.revealed = new Array(25).fill("");
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
-    this.turn = Math.random() < 0.5 ? 0 : 2;
+    this.turn = Math.random() < 0.5 ? 0 : this.playercount / 2;
+    //Codex has 1 extra card for starting team
     this.firstTurn = this.turn === 0 ? "red" : "blue";
     this.turnNo = 0;
     //Array of 1:many arrays - [[clue1, [guess1,guess2,...]],...]
@@ -241,28 +243,41 @@ class Game {
     }
   }
   setUser(role, nickname) {
-    let x;
-    switch (role) {
-      case "red Spymaster":
-        x = 0;
-        break;
-      case "red Operative":
-        x = 1;
-        break;
-      case "blue Spymaster":
-        x = 2;
-        break;
-      case "blue Operative":
-        x = 3;
-        break;
+    if (role && this.playercount === 4) {
+      let x;
+      switch (role) {
+        case "red Spymaster":
+          x = 0;
+          break;
+        case "red Operative":
+          x = 1;
+          break;
+        case "blue Spymaster":
+          x = 2;
+          break;
+        case "blue Operative":
+          x = 3;
+          break;
+      }
+      if (this.userIds[x] == undefined) {
+        this.userIds[x] = randomUUID();
+        this.nicknames[x] = nickname;
+        return this.userIds[x];
+      } else {
+        return false;
+      }
     }
-
-    if (this.userIds[x] == undefined) {
-      this.userIds[x] = randomUUID();
-      this.nicknames[x] = nickname;
-      return this.userIds[x];
-    } else {
-      return false;
+    //Loop this
+    if (this.playercount === 2) {
+      if (this.userIds[0] == undefined) {
+        this.userIds[0] = randomUUID();
+        this.nicknames[0] = nickname;
+        return this.userIds[0];
+      } else if (this.userIds[1] == undefined) {
+        this.userIds[x] = randomUUID();
+        this.nicknames[x] = nickname;
+        return this.userIds[x];
+      }
     }
   }
   deleteUser(userId) {
