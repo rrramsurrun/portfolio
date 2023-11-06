@@ -29,7 +29,7 @@ const codenamesGameSchema = new mongoose.Schema(
     clues: [],
 
     words: [String],
-    codex: Map,
+    codex: Object,
   },
   { collection: "games" }
 );

@@ -63,7 +63,7 @@ class Game {
     this.revealed = new Array(25).fill("");
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
-    this.turn = Math.random() < 0.5 ? 0 : this.playercount / 2;
+    this.turn = Math.random() < 0.5 ? 0 : 3;
     //Codex has 1 extra card for starting team
     this.firstTurn = this.turn === 0 ? "red" : "blue";
     this.turnNo = 0;
@@ -82,23 +82,91 @@ class Game {
       return data;
     });
     this.words = tempArray;
-    const deepCopy = JSON.parse(JSON.stringify(this.words));
-    //1 black card, 9 cards to first team, 8 cards to second team
-    deepCopy
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 18)
-      .forEach((e, i) => {
-        if (i === 0) {
-          this.codex[e] = "black";
-        } else if (i <= 9) {
-          //first team has nine cards
-          this.codex[e] = this.firstTurn;
-        } else {
-          //Other team has 8 cards
-          this.codex[e] = this.firstTurn === "red" ? "blue" : "red";
-        }
-      });
+    this.generateCodex();
   }
+  generateCodex() {
+    if (this.playercount === 4) {
+      const deepCopy = JSON.parse(JSON.stringify(this.words));
+      //1 black card, 9 cards to first team, 8 cards to second team
+      deepCopy
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 18)
+        .forEach((e, i) => {
+          if (i === 0) {
+            this.codex[e] = "black";
+          } else if (i <= 9) {
+            //first team has nine cards
+            this.codex[e] = this.firstTurn;
+          } else {
+            //Other team has 8 cards
+            this.codex[e] = this.firstTurn === "red" ? "blue" : "red";
+          }
+        });
+    }
+    if (this.playercount === 2) {
+      const deepCopy = JSON.parse(JSON.stringify(this.words));
+      const player1Colours = [
+        "black",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "cream",
+        "black",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "black",
+      ];
+      const player2Colours = [
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "green",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "black",
+        "black",
+        "black",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+        "cream",
+      ];
+      deepCopy
+        .sort(() => 0.5 - Math.random())
+        .forEach((e, i) => {
+          this.codex[e] = [player1Colours[i], player2Colours[i]];
+        });
+    }
+  }
+
   loader(gameData) {
     for (const k in this) {
       this[k] = gameData[k];
@@ -134,12 +202,7 @@ class Game {
       userId: this.userIds.filter((i) => i == id)[0],
       role: this.userIds.indexOf(id),
       words: this.words,
-      codex:
-        this.userIds.indexOf(id) % 2
-          ? this.win === null
-            ? null
-            : this.codex
-          : this.codex,
+      codex: this.sendCodex(id),
     });
   }
   gameJoinPacket(id) {
@@ -147,29 +210,22 @@ class Game {
     return {
       header: "gameResetData",
       words: this.words,
-      codex:
-        this.userIds.indexOf(id) % 2
-          ? this.win === null
-            ? null
-            : this.codex
-          : this.codex,
+      codex: this.sendCodex(id),
     };
   }
-  // gameData(id) {
-  //   return JSON.stringify({
-  //     header: "gameData",
-  //     ...this,
-  //     userIds: null,
-  //     userId: this.userIds.filter((i) => i == id)[0],
-  //     role: this.userIds.indexOf(id),
-  //     codex:
-  //       this.userIds.indexOf(id) % 2
-  //         ? this.win === null
-  //           ? null
-  //           : this.codex
-  //         : this.codex,
-  //   });
-  // }
+  sendCodex(id) {
+    const i = this.userIds.indexOf(id);
+    if (this.playercount === 4) {
+      return i % 2 ? (this.win === null ? null : this.codex) : this.codex;
+    }
+    if (this.playercount === 2) {
+      const halfcodex = {};
+      for (const [k, v] of Object.entries(this.codex)) {
+        halfcodex[k] = v[i];
+      }
+      return halfcodex;
+    }
+  }
   playerData() {
     //Provide player/role data for individuals looking to join a game
     return JSON.stringify({
@@ -259,7 +315,7 @@ class Game {
           x = 3;
           break;
       }
-      if (this.userIds[x] == undefined) {
+      if (this.userIds[x] === null) {
         this.userIds[x] = randomUUID();
         this.nicknames[x] = nickname;
         return this.userIds[x];
@@ -269,16 +325,15 @@ class Game {
     }
     //Loop this
     if (this.playercount === 2) {
-      if (this.userIds[0] == undefined) {
-        this.userIds[0] = randomUUID();
-        this.nicknames[0] = nickname;
-        return this.userIds[0];
-      } else if (this.userIds[1] == undefined) {
-        this.userIds[x] = randomUUID();
-        this.nicknames[x] = nickname;
-        return this.userIds[x];
+      for (let i = 0; i < 2; i++) {
+        if (this.userIds[i] === null) {
+          this.userIds[i] = randomUUID();
+          this.nicknames[i] = nickname;
+          return this.userIds[i];
+        }
       }
     }
+    return false;
   }
   deleteUser(userId) {
     let userPos;
