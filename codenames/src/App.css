@@ -149,6 +149,9 @@
 .players-blue {
   background-color: #6699cc;
 }
+.players-green {
+  background-color: darkgreen;
+}
 .playercard {
   display: flex;
   flex-direction: row;
@@ -207,6 +210,10 @@
   background-color: #6699cc;
   border-radius: 3px;
 }
+.playercard-green {
+  background-color: darkgreen;
+  border-radius: 3px;
+}
 .playercard-turn {
   /* box-shadow: 2px 2px white; alternative option*/
   border-style: outset;
@@ -227,7 +234,7 @@
   color: cyan;
 }
 .playertitle-green {
-  color: darkgreen;
+  color: white;
 }
 .playername {
   color: white;
@@ -317,6 +324,9 @@
 .wordcard--cream {
   background-color: rgb(245, 232, 160);
 }
+.wordcard--green {
+  background-color: #90ee90;
+}
 .wordcard--black {
   color: aliceblue;
   background-color: hsla(240, 8%, 3%, 0.781);
@@ -367,6 +377,10 @@
 .select-player-blue {
   color: cyan;
   background-color: #6699cc;
+  border-radius: 3px;
+}
+.select-player-green {
+  background-color: #90ee90;
   border-radius: 3px;
 }
 

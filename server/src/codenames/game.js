@@ -50,8 +50,8 @@ class Game {
     //Doesn't reset between games
     this.room = null;
     //Values which are reset individually
-    this.userIds = Array(playercount);
-    this.nicknames = Array(playercount);
+    this.userIds = Array(4);
+    this.nicknames = Array(4);
     //Values that are reset with a new game
     this.resetGamestate();
     //reset with resetGameboard
@@ -63,9 +63,12 @@ class Game {
     this.revealed = new Array(25).fill("");
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
-    this.turn = Math.random() < 0.5 ? 0 : 3;
+    this.turn = Math.random() < 0.5 ? 0 : 2;
     //Codex has 1 extra card for starting team
-    this.firstTurn = this.turn === 0 ? "red" : "blue";
+    if (this.playercount === 4) {
+      this.firstTurn = this.turn === 0 ? "red" : "blue";
+    }
+
     this.turnNo = 0;
     //Array of 1:many arrays - [[clue1, [guess1,guess2,...]],...]
     this.clues = [];
@@ -221,7 +224,7 @@ class Game {
     if (this.playercount === 2) {
       const halfcodex = {};
       for (const [k, v] of Object.entries(this.codex)) {
-        halfcodex[k] = v[i];
+        halfcodex[k] = v[i === 2 ? 1 : 0];
       }
       return halfcodex;
     }
@@ -245,41 +248,71 @@ class Game {
   }
 
   clickWord(userId, i) {
-    if (this.userIds.indexOf(userId) === this.turn) {
-      //Find word color
-      const color = this.codex.get(this.words[i]) ?? "cream";
-      //Update revealed list
-      this.revealed[i] = [this.words[i], color];
+    let userpos = this.userIds.indexOf(userId);
+    if (userpos === this.turn) {
+      let color;
+      if (playercount === 4) {
+        //Find word color
+        color = this.codex.get(this.words[i]) ?? "cream";
+        //Update revealed list
+        this.revealed[i] = [this.words[i], color];
+        //apply game logic to word choice
+        if (
+          color === "cream" ||
+          (this.turn === 1) & (color === "blue") ||
+          (this.turn === 3) & (color === "red")
+        ) {
+          //selected other team's card
+          this.endTurn(userId);
+        } else if (color === "black") {
+          //selected assassin card, end game
+          this.win = this.turn === 1 ? "blue" : "red";
+        }
+        //check for win status
+        if (
+          this.revealed.filter((wordArr) => wordArr[1] == "blue").length ===
+          (this.firstTurn === "blue" ? 9 : 8)
+        ) {
+          this.win = "blue";
+        }
+        if (
+          this.revealed.filter((wordArr) => wordArr[1] == "red").length ===
+          (this.firstTurn === "red" ? 9 : 8)
+        ) {
+          this.win = "red";
+        }
+      }
+      if (playercount === 2) {
+        //Find the colour of the word on the partner's codex
+        userpos = userpos === 2 ? 1 : 0;
+        const otherpos = userpos === 1 ? 0 : 1;
+        color = this.codex.get(this.words[i])[otherpos];
+        //Update revealed list for this user
+        this.revealed[i][userpos] = [this.words[i], color];
+        if (color === "black") {
+          //Selected Assassin card
+          this.win = "lose";
+        } else if (color === "cream") {
+          //Selected civillian card
+          this.endTurn(userId);
+        } else if (color === "green") {
+          //Update revealed list for other user
+          this.revealed[i][otherpos] = [this.words[i], color];
+          //check for win condition
+          if (
+            this.revealed.filter((wordArr) => wordArr[1] == "green").length ===
+            9
+          ) {
+            this.win = "red";
+          }
+        }
+      }
+
       //Add guesses to clues, if no guesses against clue add an array of 1
       //if previous guesses against clues, add clue guess to existing guess array
       this.clues[this.clues.length - 1].length == 2
         ? this.clues[this.clues.length - 1].push([this.words[i]])
         : this.clues[this.clues.length - 1][2].push(this.words[i]);
-      //apply game logic to word choice
-      if (
-        color === "cream" ||
-        (this.turn === 1) & (color === "blue") ||
-        (this.turn === 3) & (color === "red")
-      ) {
-        //selected other team's card
-        this.endTurn(userId);
-      } else if (color === "black") {
-        //selected assassin card, end game
-        this.win = this.turn === 1 ? "blue" : "red";
-      }
-      //check for win status
-      if (
-        this.revealed.filter((wordArr) => wordArr[1] == "blue").length ===
-        (this.firstTurn === "blue" ? 9 : 8)
-      ) {
-        this.win = "blue";
-      }
-      if (
-        this.revealed.filter((wordArr) => wordArr[1] == "red").length ===
-        (this.firstTurn === "red" ? 9 : 8)
-      ) {
-        this.win = "red";
-      }
       this.turnNo++;
 
       return true;
@@ -289,15 +322,16 @@ class Game {
   }
   sendClue(userId, clueArr) {
     if (this.userIds.indexOf(userId) === this.turn) {
+      clueArr.unshift(this.userIds.indexOf(userId));
       this.clues.push(clueArr);
       this.turn = (this.turn + 1) % 4;
       this.turnNo++;
-
       return true;
     } else {
       return false;
     }
   }
+
   setUser(role, nickname) {
     if (role && this.playercount === 4) {
       let x;
@@ -315,25 +349,20 @@ class Game {
           x = 3;
           break;
       }
-      if (this.userIds[x] === null) {
-        this.userIds[x] = randomUUID();
-        this.nicknames[x] = nickname;
-        return this.userIds[x];
-      } else {
-        return false;
-      }
+      return this.setAndReturnUser(x, nickname);
     }
-    //Loop this
-    if (this.playercount === 2) {
-      for (let i = 0; i < 2; i++) {
-        if (this.userIds[i] === null) {
-          this.userIds[i] = randomUUID();
-          this.nicknames[i] = nickname;
-          return this.userIds[i];
-        }
-      }
+    return (
+      this.setAndReturnUser(0, nickname) && this.setAndReturnUser(2, nickname)
+    );
+  }
+  setAndReturnUser(x, nickname) {
+    if (this.userIds[x] === undefined || this.userIds[x] === null) {
+      this.userIds[x] = randomUUID();
+      this.nicknames[x] = nickname;
+      return this.userIds[x];
+    } else {
+      return false;
     }
-    return false;
   }
   deleteUser(userId) {
     let userPos;

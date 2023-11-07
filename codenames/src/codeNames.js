@@ -33,8 +33,17 @@ const CodeNames = ({ mysocket, game }) => {
   }, [clipboardNote]);
 
   const clickWord = (i) => {
-    if (game.revealed[i] === "" && game.role % 2 !== 0 && game.turn % 2 !== 0) {
-      mysocket.clickWord(i);
+    //In 4 player, players 1+3 guess on turns 1 and 3 respectively
+    if (game.playercount === 4) {
+      if (game.revealed[i] === "" && game.role === game.turn) {
+        mysocket.clickWord(i);
+      }
+    }
+    //In 2 player, player 0 goes on turn 3, player 2 goes on turn 1 (Array numbers)
+    if (game.playercount === 2) {
+      if (game.revealed[i] === "" && game.turn + game.role === 3) {
+        mysocket.clickWord(i);
+      }
     }
   };
   const endTurn = () => {
@@ -54,10 +63,17 @@ const CodeNames = ({ mysocket, game }) => {
   };
 
   const playerCardPlain = (i, colour) => {
+    if (game.playercount === 2) {
+      colour = "green";
+    }
     return (
       <div className={`playerdetails-plain playercard-${colour}`}>
         <div className={`playertitle playertitle-${colour}`}>
-          {i % 2 === 0 ? "Spymaster" : "Operative"}
+          {game.playercount === 2
+            ? "Spy"
+            : i % 2 === 0
+            ? "Spymaster"
+            : "Operative"}
         </div>
         <div className={"playername"}>
           {game.nicknames[i] ? `${game.nicknames[i]}` : "Awaiting player"}
@@ -74,7 +90,11 @@ const CodeNames = ({ mysocket, game }) => {
       >
         <div className={`playerdetails playercard-${colour}`}>
           <div className={`playertitle playertitle-${colour}`}>
-            {i % 2 === 0 ? "Spymaster" : "Operative"}
+            {game.playercount === 2
+              ? "Spy"
+              : i % 2 === 0
+              ? "Spymaster"
+              : "Operative"}
           </div>
           <div className={"playername"}>
             {game.nicknames[i] ? `${game.nicknames[i]}` : "Awaiting player"}
@@ -190,46 +210,62 @@ const CodeNames = ({ mysocket, game }) => {
   };
 
   const lastClueBox = () => {
-    return (
-      <div className="lastcluebox">
-        {game.turn - 1 === 0
-          ? playerCardPlain(0, "red")
-          : playerCardPlain(2, "blue")}
-        <div>gave the clue</div>
-        <div className="guess guess--last">
-          {game.clues[game.clues.length - 1][0]}
+    if (game.clues.length > 0) {
+      const lastClue = game.clues[game.clues.length - 1];
+      return (
+        <div className="lastcluebox">
+          {game.turn - 1 === 0
+            ? playerCardPlain(lastClue[0], "red")
+            : playerCardPlain(lastClue[0], "blue")}
+          <div>gave the clue</div>
+          <div className="guess guess--last">{lastClue[1]}</div>
+          <div>{`to reveal ${lastClue[2]} words`}</div>
+          {game.turn === game.role ? (
+            <button onClick={() => endTurn()}>End Turn</button>
+          ) : (
+            ""
+          )}
         </div>
-        <div>{`to reveal ${game.clues[game.clues.length - 1][1]} words`}</div>
-        {game.turn === game.role ? (
-          <button onClick={() => endTurn()}>End Turn</button>
-        ) : (
-          ""
-        )}
-      </div>
-    );
+      );
+    }
   };
 
   const waitBox = () => {
-    return (
-      <div className="waitbox">{`Waiting for a clue from ${
-        game.nicknames[game.turn] && game.turn === 0
-          ? "Red Spymaster"
-          : "Blue Spymaster"
-      }`}</div>
-    );
+    if (game.playercount === 4) {
+      return (
+        <div className="waitbox">{`Waiting for a clue from ${
+          game.nicknames[game.turn] && game.turn === 0
+            ? "Red Spymaster"
+            : "Blue Spymaster"
+        }`}</div>
+      );
+    }
+    if (game.playercount === 2) {
+      return (
+        <div className="waitbox">{`Waiting for a clue from ${
+          game.nicknames[game.turn]
+        }`}</div>
+      );
+    }
   };
 
   const clueBox = () => {
+    //If game win condition then present winbox
     if (game.win !== null) {
       return winBox();
     }
-    if (game.role % 2 === 0 && game.turn === game.role) {
-      return clueInputBox();
+    //If turn is 0 or 2 it is time for a clue
+    if (game.turn % 2 === 0) {
+      if (game.role % 2 === 0 && game.turn === game.role) {
+        return clueInputBox();
+      } else {
+        return waitBox();
+      }
     }
+    //If turn is 1 or 3 it is guess time (for thee)
     if (game.turn % 2 !== 0) {
       return lastClueBox();
     }
-    return waitBox();
   };
 
   const resetGameButton = () => {
@@ -285,11 +321,22 @@ const CodeNames = ({ mysocket, game }) => {
   };
 
   const playersBox = (colour) => {
+    if (colour === "left" || colour === "right") {
+      return (
+        <div className="players">
+          <div className={`players-green`}>
+            {playerCard(colour === "left" ? 0 : 1, "green")}
+            {cluecountCard("green")}
+          </div>
+        </div>
+      );
+    }
+    const firstPlayer = colour === "red" ? 0 : 2;
     return (
       <div className="players">
         <div className={`players-${colour}`}>
-          {playerCard(0, colour)}
-          {playerCard(1, colour)}
+          {playerCard(firstPlayer, colour)}
+          {playerCard(firstPlayer + 1, colour)}
           {cluecountCard(colour)}
         </div>
       </div>
@@ -308,7 +355,7 @@ const CodeNames = ({ mysocket, game }) => {
         </div>
       </div>
       <div className="gamescreen">
-        {playersBox("red")}
+        {game.playercount === 4 ? playersBox("red") : playersBox("left")}
 
         <div className="cards">
           {[...Array(5).keys()].map((e) => (
@@ -446,10 +493,10 @@ const CodeNames = ({ mysocket, game }) => {
                       }}
                     >
                       <TableCell align="left">
-                        <Box className="guess guess--last">{oldclue[0]}</Box>
+                        <Box className="guess guess--last">{oldclue[1]}</Box>
                       </TableCell>
                       <TableCell align="center">
-                        <Box className="cluecount">{oldclue[1]}</Box>
+                        <Box className="cluecount">{oldclue[2]}</Box>
                       </TableCell>
                       <TableCell align="left">
                         <Box
@@ -460,8 +507,8 @@ const CodeNames = ({ mysocket, game }) => {
                             flexWrap: "wrap",
                           }}
                         >
-                          {oldclue.length > 2
-                            ? oldclue[2].map((i, index) => (
+                          {oldclue.length > 3
+                            ? oldclue[3].map((i, index) => (
                                 <Box
                                   key={`oldclue-box-${index}`}
                                   className={`guess guess--${
@@ -487,7 +534,7 @@ const CodeNames = ({ mysocket, game }) => {
           </TableContainer>
           {resetGameButton()}
         </div>
-        {playersBox("blue")}
+        {game.playercount === 4 ? playersBox("blue") : playersBox("right")}
       </div>
     </div>
   );

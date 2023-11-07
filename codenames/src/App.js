@@ -63,6 +63,7 @@ function App(args) {
 
       mysocket.userId = data.userId;
       setGamedata(data);
+      console.log(data);
     });
     mysocket.on("findGameResponse", (msg) => {
       const data = JSON.parse(msg);
