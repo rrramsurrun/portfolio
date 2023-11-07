@@ -60,7 +60,7 @@ class Game {
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]
-    this.revealed = new Array(25).fill("");
+    this.revealed = {};
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
     this.turn = Math.random() < 0.5 ? 0 : 2;
@@ -250,12 +250,13 @@ class Game {
   clickWord(userId, i) {
     let userpos = this.userIds.indexOf(userId);
     if (userpos === this.turn) {
+      const word = this.words[i];
       let color;
-      if (playercount === 4) {
+      if (this.playercount === 4) {
         //Find word color
-        color = this.codex.get(this.words[i]) ?? "cream";
+        color = this.codex[word] ?? "cream";
         //Update revealed list
-        this.revealed[i] = [this.words[i], color];
+        this.revealed[word] = [color];
         //apply game logic to word choice
         if (
           color === "cream" ||
@@ -270,19 +271,19 @@ class Game {
         }
         //check for win status
         if (
-          this.revealed.filter((wordArr) => wordArr[1] == "blue").length ===
-          (this.firstTurn === "blue" ? 9 : 8)
+          Object.entries(this.revealed).filter((wordArr) => wordArr == "blue")
+            .length === (this.firstTurn === "blue" ? 9 : 8)
         ) {
           this.win = "blue";
         }
         if (
-          this.revealed.filter((wordArr) => wordArr[1] == "red").length ===
-          (this.firstTurn === "red" ? 9 : 8)
+          Object.entries(this.revealed).filter((wordArr) => wordArr == "red")
+            .length === (this.firstTurn === "red" ? 9 : 8)
         ) {
           this.win = "red";
         }
       }
-      if (playercount === 2) {
+      if (this.playercount === 2) {
         //Find the colour of the word on the partner's codex
         userpos = userpos === 2 ? 1 : 0;
         const otherpos = userpos === 1 ? 0 : 1;
@@ -310,9 +311,9 @@ class Game {
 
       //Add guesses to clues, if no guesses against clue add an array of 1
       //if previous guesses against clues, add clue guess to existing guess array
-      this.clues[this.clues.length - 1].length == 2
+      this.clues[this.clues.length - 1].length == 3
         ? this.clues[this.clues.length - 1].push([this.words[i]])
-        : this.clues[this.clues.length - 1][2].push(this.words[i]);
+        : this.clues[this.clues.length - 1][3].push(this.words[i]);
       this.turnNo++;
 
       return true;

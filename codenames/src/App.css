@@ -317,17 +317,37 @@
   background-color: #c41e3a;
   color: white;
 }
+.wordcard--light-red {
+  background-color: #e65c73;
+  color: white;
+}
 .wordcard--blue {
   background-color: #6699cc;
+  color: white;
+}
+.wordcard--light-blue {
+  background-color: #b9d7f5;
   color: white;
 }
 .wordcard--cream {
   background-color: rgb(245, 232, 160);
 }
+.wordcard--light-cream {
+  background-color: #c41e3a;
+  color: white;
+}
 .wordcard--green {
+  background-color: darkgreen;
+}
+.wordcard--light-green {
   background-color: #90ee90;
+  color: white;
 }
 .wordcard--black {
+  color: aliceblue;
+  background-color: hsla(240, 8%, 3%, 0.781);
+}
+.wordcard--light-black {
   color: aliceblue;
   background-color: hsla(240, 8%, 3%, 0.781);
 }

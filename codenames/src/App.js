@@ -86,6 +86,7 @@ function App(args) {
     mysocket.on("gameUpdate", (msg) => {
       const data = JSON.parse(msg);
       setGamedata(data);
+      console.log(data);
     });
     mysocket.on("resetGameResponse", () => {
       mysocket.requestNewWords();

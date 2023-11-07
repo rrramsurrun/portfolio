@@ -32,16 +32,16 @@ const CodeNames = ({ mysocket, game }) => {
     }
   }, [clipboardNote]);
 
-  const clickWord = (i) => {
+  const clickWord = (i, word) => {
     //In 4 player, players 1+3 guess on turns 1 and 3 respectively
     if (game.playercount === 4) {
-      if (game.revealed[i] === "" && game.role === game.turn) {
+      if (game.revealed[word] === undefined && game.role === game.turn) {
         mysocket.clickWord(i);
       }
     }
     //In 2 player, player 0 goes on turn 3, player 2 goes on turn 1 (Array numbers)
     if (game.playercount === 2) {
-      if (game.revealed[i] === "" && game.turn + game.role === 3) {
+      if (game.revealed[word] === undefined && game.turn + game.role === 3) {
         mysocket.clickWord(i);
       }
     }
@@ -138,30 +138,39 @@ const CodeNames = ({ mysocket, game }) => {
     } else {
       total = colour === "red" ? 8 : 9;
     }
-    const guessed = game.revealed.filter((arr) => arr[1] === colour).length;
+
+    let guessed;
+    if (Object.keys(game.revealed).length === 0) {
+      guessed = 0;
+    } else {
+      guessed = Object.entries(game.revealed).filter(
+        (arr) => arr === colour
+      ).length;
+    }
     return (
       <div className={`cluecounter`}>{`${total - guessed} words left`}</div>
     );
   };
 
   const wordCard = (i) => {
+    const word = game.words[i];
+    const codexword = game.codex
+      ? game.codex[word] === undefined
+        ? "cream"
+        : `light-${game.codex[word]}`
+      : "cream";
+    const revealword = game.revealed[word] ?? null;
     return (
       <button
         key={`word ${i}`}
         // codex present means matrix visible, all cards colored.
         // revealed words also colored
-        className={`wordcard wordcard--${
-          game.codex
-            ? game.codex[game.words[i]] === undefined
-              ? "cream"
-              : game.codex[game.words[i]]
-            : game.revealed[i][1]
-        } ${game.revealed[i] ? "revealed" : ""} ${
+        className={`wordcard wordcard--${revealword ?? codexword} ${
           game.win === null ? "" : "wordcard--end"
         }`}
-        onClick={() => clickWord(i)}
+        onClick={() => clickWord(i, word)}
       >
-        {game.words[i]}
+        {word}
       </button>
     );
   };
@@ -511,17 +520,9 @@ const CodeNames = ({ mysocket, game }) => {
                             ? oldclue[3].map((i, index) => (
                                 <Box
                                   key={`oldclue-box-${index}`}
-                                  className={`guess guess--${
-                                    game.revealed.filter(
-                                      (arr) => arr[0] === i
-                                    )[0][1]
-                                  }`}
+                                  className={`guess guess--${game.revealed[i]}`}
                                 >
-                                  {
-                                    game.revealed.filter(
-                                      (arr) => arr[0] === i
-                                    )[0][0]
-                                  }
+                                  {i}
                                 </Box>
                               ))
                             : ""}

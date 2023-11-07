@@ -20,7 +20,7 @@ const codenamesGameSchema = new mongoose.Schema(
     nicknames: [String],
     playercount: Number,
 
-    revealed: [],
+    revealed: { type: Object, minimize: false, default: {} },
     resetGameSurvey: [Boolean],
     win: String,
     turn: Number,
