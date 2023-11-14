@@ -83,6 +83,7 @@
 
 .codex-guide {
   margin: 10px;
+  min-width: min-content;
 }
 .codex-guide__row {
   margin: 0 auto;
@@ -91,14 +92,14 @@
   justify-content: center;
 }
 .codex-guide__cell-start {
-  height: 20px;
-  width: 250px;
+  height: 1.2em;
+  width: 30%;
   margin: 2px;
   text-align: end;
 }
 .codex-guide__cell {
-  height: 20px;
-  width: 20px;
+  height: 1.2em;
+  width: 2%;
   margin: 2px;
   border-radius: 3px;
   text-align: center;
@@ -312,6 +313,39 @@
   margin: 2px;
   border-style: none;
 }
+.wordcard--split {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  border-radius: 10px;
+  font-size: 1em;
+  justify-content: center;
+  height: 3em;
+  width: 100%;
+  margin: 2px;
+  padding: 0px;
+  border-style: none;
+}
+.wordcard__half {
+  display: block;
+  justify-content: center;
+  height: 100%;
+  width: 50%;
+  margin: 0px;
+  border-style: none;
+}
+.wordcard__half--left {
+  border-radius: 10px 0px 0px 10px;
+}
+.wordcard__half--right {
+  border-radius: 0px 10px 10px 0px;
+}
+.wordcard--split__word {
+  position: absolute;
+  /* temporary */
+  margin-top: 12px;
+  font-size: 1em;
+}
 
 .wordcard--red {
   background-color: #c41e3a;
@@ -319,7 +353,7 @@
 }
 .wordcard--light-red {
   background-color: #e65c73;
-  color: white;
+  color: black;
 }
 .wordcard--blue {
   background-color: #6699cc;
@@ -327,29 +361,37 @@
 }
 .wordcard--light-blue {
   background-color: #b9d7f5;
-  color: white;
+  color: black;
 }
 .wordcard--cream {
-  background-color: rgb(245, 232, 160);
+  background-color: rgb(202, 189, 112);
 }
 .wordcard--light-cream {
-  background-color: #c41e3a;
-  color: white;
+  background-color: rgb(247, 238, 192);
+  color: black;
 }
 .wordcard--green {
   background-color: darkgreen;
+  color: aliceblue;
 }
 .wordcard--light-green {
   background-color: #90ee90;
-  color: white;
+  color: black;
 }
 .wordcard--black {
   color: aliceblue;
   background-color: hsla(240, 8%, 3%, 0.781);
 }
-.wordcard--light-black {
+.wordcard--split__word--whitetext {
   color: aliceblue;
-  background-color: hsla(240, 8%, 3%, 0.781);
+}
+
+.revealed {
+  box-shadow: 3px 3px grey;
+}
+.clickable:hover {
+  box-shadow: 0 0 6px rgba(35, 173, 278, 1);
+  cursor: pointer;
 }
 .wordcard--end {
   opacity: 60%;
@@ -449,4 +491,8 @@
   color: aliceblue;
   background-color: hsla(240, 8%, 3%, 0.781);
   border-color: hsla(240, 8%, 3%, 0.781);
+}
+.guess--green {
+  color: aliceblue;
+  background-color: darkgreen;
 }

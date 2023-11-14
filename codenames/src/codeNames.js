@@ -32,19 +32,8 @@ const CodeNames = ({ mysocket, game }) => {
     }
   }, [clipboardNote]);
 
-  const clickWord = (i, word) => {
-    //In 4 player, players 1+3 guess on turns 1 and 3 respectively
-    if (game.playercount === 4) {
-      if (game.revealed[word] === undefined && game.role === game.turn) {
-        mysocket.clickWord(i);
-      }
-    }
-    //In 2 player, player 0 goes on turn 3, player 2 goes on turn 1 (Array numbers)
-    if (game.playercount === 2) {
-      if (game.revealed[word] === undefined && game.turn + game.role === 3) {
-        mysocket.clickWord(i);
-      }
-    }
+  const clickWord = (i) => {
+    mysocket.clickWord(i);
   };
   const endTurn = () => {
     mysocket.endTurn();
@@ -133,19 +122,17 @@ const CodeNames = ({ mysocket, game }) => {
   };
   const cluecountCard = (colour) => {
     let total;
+    let guessed;
     if (game.firstTurn === 0) {
       total = colour === "red" ? 9 : 8;
     } else {
       total = colour === "red" ? 8 : 9;
     }
 
-    let guessed;
-    if (Object.keys(game.revealed).length === 0) {
+    if (game.revealed.length === 0) {
       guessed = 0;
     } else {
-      guessed = Object.entries(game.revealed).filter(
-        (arr) => arr === colour
-      ).length;
+      guessed = game.revealed.filter((arr) => arr === colour).length;
     }
     return (
       <div className={`cluecounter`}>{`${total - guessed} words left`}</div>
@@ -153,22 +140,194 @@ const CodeNames = ({ mysocket, game }) => {
   };
 
   const wordCard = (i) => {
+    let clickable;
+    let revealedToggle = "unrevealed";
+    let codexcolor = "";
     const word = game.words[i];
-    const codexword = game.codex
-      ? game.codex[word] === undefined
-        ? "cream"
-        : `light-${game.codex[word]}`
-      : "cream";
-    const revealword = game.revealed[word] ?? null;
+    let leftcolor;
+    let rightcolor;
+    let finalcolor;
+
+    if (game.playercount === 4) {
+      clickable = game.role % 2 === 1 && game.turn === game.role ? true : false;
+
+      if (game.codex) {
+        codexcolor =
+          game.codex[word] === undefined
+            ? "light-cream"
+            : game.codex[word] === "black"
+            ? "black"
+            : `light-${game.codex[word]}`;
+      }
+      if (game.revealed[i] !== null && game.revealed[i] !== undefined) {
+        clickable = false;
+        revealedToggle = "revealed";
+      }
+      if (game.win !== null) {
+        clickable = false;
+      }
+      //In a 4-player game the revealed word overrules the codex
+      finalcolor = game.revealed[i] ?? codexcolor;
+      return singleColorCard(i, word, clickable, finalcolor, revealedToggle);
+    }
+
+    if (game.playercount === 2 && game.win === null) {
+      //Default a card to clickable, amend later
+      clickable = game.turn + game.role === 3 ? true : false;
+      //Find user position in Revealed array
+      const userpos = game.role === 2 ? 1 : 0;
+      const otherpos = userpos === 1 ? 0 : 1;
+      //Use a lighter shade for your own codex
+      if (game.codex) {
+        codexcolor =
+          game.codex[word] === "black" ? "black" : `light-${game.codex[word]}`;
+      }
+      //If there is a non-null value for a word, it has been revealed on one or both sides
+      if (game.revealed[i] !== null && game.revealed[i] !== undefined) {
+        leftcolor =
+          game.revealed[i][0] === undefined ? null : game.revealed[i][0];
+        rightcolor =
+          game.revealed[i][1] === undefined ? null : game.revealed[i][1];
+      }
+      // const splitcolor =
+      //   game.role === 0
+      //     ? `${codexcolor}-${revealcolor}`
+      //     : `${revealcolor}-${codexcolor}`;
+
+      if (leftcolor === "green" || rightcolor === "green") {
+        //If a card is revealed as green for either side, it is green for both
+        finalcolor = "green";
+        clickable = false;
+        revealedToggle = "revealed";
+      } else if (leftcolor === "cream" && rightcolor === null) {
+        //Right player has clicked on a word that was cream in the left's codex
+        //Left player has not clicked this word
+        //Right player can no longer click it, the right one can
+        //If a card is revealed as cream, it lies partially over your own colour
+        if (game.role === 2) {
+          return splitColorCard(
+            i,
+            word,
+            false,
+            false,
+            "cream revealed",
+            codexcolor
+          );
+        } else {
+          return splitColorCard(
+            i,
+            word,
+            clickable,
+            false,
+            codexcolor,
+            "cream revealed"
+          );
+        }
+      } else if (leftcolor === null && rightcolor === "cream") {
+        //left player has clicked on a word that was cream in the right's codex
+        //right player has not clicked this word
+        //left player can no longer click it, the left one can
+        clickable = game.role === 0 ? false : true;
+        //If a card is revealed as cream, it lies partially over your own colour
+        if (game.role === 0) {
+          //The left player cannot click, but sees their codex underneath
+          return splitColorCard(
+            i,
+            word,
+            false,
+            false,
+            codexcolor,
+            "cream revealed"
+          );
+        } else {
+          //The right player will see cream overlaying their codex color
+          return splitColorCard(
+            i,
+            word,
+            false,
+            clickable,
+            "cream revealed",
+            codexcolor
+          );
+        }
+      } else if (leftcolor === "cream" && rightcolor === "cream") {
+        return singleColorCard(i, word, false, "cream", "revealed");
+      }
+    }
+
+    if (game.playercount === 2 && game.win !== null) {
+      //In a 2 player game the revealed is full populated at the end of the game
+      return splitColorCard(
+        i,
+        word,
+        false,
+        game.revealed[i][0],
+        game.revealed[i][1]
+      );
+    }
+
+    return singleColorCard(
+      i,
+      word,
+      clickable,
+      finalcolor ?? codexcolor,
+      revealedToggle
+    );
+  };
+
+  const splitColorCard = (
+    i,
+    word,
+    leftclickable,
+    rightclickable,
+    leftcolor,
+    rightcolor
+  ) => {
+    return (
+      <div className={`wordcard--split`}>
+        <button
+          key={`word ${i}-left`}
+          // codex present means matrix visible, all cards colored.
+          // revealed words also colored
+          className={`wordcard__half wordcard__half--left ${
+            leftclickable ? "clickable" : ""
+          } wordcard--${leftcolor}`}
+          onClick={leftclickable ? () => clickWord(i) : undefined}
+        />
+        <span
+          key={`word ${i}-middle`}
+          className={`wordcard--split__word ${
+            leftcolor === "black" || rightcolor === "black"
+              ? "wordcard--split__word--whitetext"
+              : ""
+          }`}
+        >
+          {word}
+        </span>
+        <button
+          key={`word ${i}-right`}
+          // codex present means matrix visible, all cards colored.
+          // revealed words also colored
+          className={`wordcard__half wordcard__half--right ${
+            rightclickable ? "clickable" : ""
+          } wordcard--${rightcolor}`}
+          onClick={rightclickable ? () => clickWord(i) : undefined}
+        />
+      </div>
+    );
+  };
+  const singleColorCard = (i, word, clickable, finalcolor, revealedToggle) => {
     return (
       <button
         key={`word ${i}`}
         // codex present means matrix visible, all cards colored.
         // revealed words also colored
-        className={`wordcard wordcard--${revealword ?? codexword} ${
+        className={`wordcard ${
+          clickable ? "clickable" : ""
+        } wordcard--${finalcolor} ${
           game.win === null ? "" : "wordcard--end"
-        }`}
-        onClick={() => clickWord(i, word)}
+        }${revealedToggle}`}
+        onClick={clickable ? () => clickWord(i) : undefined}
       >
         {word}
       </button>
@@ -176,11 +335,19 @@ const CodeNames = ({ mysocket, game }) => {
   };
 
   const winBox = () => {
-    return (
-      <div className={`winbox winbox-${game.win}`}>{`${
-        game.win.charAt(0).toUpperCase() + game.win.slice(1)
-      } Team Wins!`}</div>
-    );
+    if (game.playercount === 4) {
+      return (
+        <div className={`winbox winbox-${game.win}`}>{`${
+          game.win.charAt(0).toUpperCase() + game.win.slice(1)
+        } Team Wins!`}</div>
+      );
+    }
+    if (game.win === "win") {
+      return <div className={`winbox`}>{`You Both Win!`}</div>;
+    }
+    if (game.win === "lose") {
+      return <div className={`winbox`}>{`You Both Lose!`}</div>;
+    }
   };
   const clueInputBox = () => {
     return (
@@ -334,8 +501,7 @@ const CodeNames = ({ mysocket, game }) => {
       return (
         <div className="players">
           <div className={`players-green`}>
-            {playerCard(colour === "left" ? 0 : 1, "green")}
-            {cluecountCard("green")}
+            {playerCard(colour === "left" ? 0 : 2, "green")}
           </div>
         </div>
       );
@@ -349,6 +515,194 @@ const CodeNames = ({ mysocket, game }) => {
           {cluecountCard(colour)}
         </div>
       </div>
+    );
+  };
+
+  const codexClueBox = () => {
+    return (
+      <div className="codex-guide">
+        <div className="codex-guide__row">
+          <Box
+            key={`codex-guide-upper-cell-start`}
+            className={`codex-guide__cell-start`}
+          >
+            Colours as your partner sees them:
+          </Box>
+          {[
+            "black",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "cream",
+            "black",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "black",
+          ].map((i, index) => (
+            <Box
+              key={`codex-guide-upper-cellbox-${index}`}
+              className={`codex-guide__cell codex-guide__cell--${i}`}
+            />
+          ))}
+        </div>
+        <div className="codex-guide__row codex-guide__row--middle">
+          <Box
+            key={`codex-guide-middle-cell-start`}
+            className={`codex-guide__cell-start`}
+          >
+            {" "}
+          </Box>
+          {Array(25)
+            .fill("")
+            .map((x, index) => (
+              <Box
+                key={`codex-guide-middle-cellbox-${index}`}
+                className={`codex-guide__cell codex-guide__cell--middle`}
+              >
+                &#x2195;
+              </Box>
+            ))}
+        </div>
+        <div className="codex-guide__row">
+          <Box
+            key={`codex-guide-lower-cell-start`}
+            className={`codex-guide__cell-start`}
+          >
+            Colours as you see them:
+          </Box>
+          {[
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "green",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "black",
+            "black",
+            "black",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+            "cream",
+          ].map((i, index) => (
+            <Box
+              key={`codex-guide-lower-cellbox-${index}`}
+              className={`codex-guide__cell codex-guide__cell--${i}`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const findCluesColor = (word, oldclue) => {
+    const i = game.words.indexOf(word);
+    if (game.playercount === 4) {
+      return game.revealed[i];
+    }
+    if (game.playercount === 2) {
+      if (game.revealed[i] !== undefined) {
+        return game.revealed[i][oldclue[0] === 0 ? 0 : 1];
+      }
+    }
+  };
+  const cluesHistoryBox = (oldclue) => {
+    return (
+      <Box
+        className="guesses"
+        sx={{
+          display: "flex",
+          alignContent: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
+        {oldclue.length > 3
+          ? oldclue[3].map((i, index) => (
+              <Box
+                key={`oldclue-box-${index}`}
+                className={`guess guess--${findCluesColor(i, oldclue)}`}
+              >
+                {i}
+              </Box>
+            ))
+          : ""}
+      </Box>
+    );
+  };
+  const cluesHistory = () => {
+    return (
+      <TableContainer className="turnstable">
+        <Table stickyHeader aria-label="simple table">
+          <colgroup>
+            <col width="15%" />
+            <col width="15%" />
+            <col width="5%" />
+            <col width="65%" />
+          </colgroup>
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Spy</TableCell>
+              <TableCell align="left">Clue</TableCell>
+              <TableCell align="left">To Find</TableCell>
+              <TableCell align="left">Guesses Made</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {game.clues
+              .slice(0)
+              .reverse()
+              .map((oldclue, index) => (
+                <TableRow
+                  key={`${oldclue}${index}`}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell align="left">
+                    <Box className="guess guess--last">
+                      {game.nicknames[oldclue[0]]}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="left">
+                    <Box className="guess guess--last">{oldclue[1]}</Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box className="cluecount">{oldclue[2]}</Box>
+                  </TableCell>
+                  <TableCell align="left">{cluesHistoryBox(oldclue)}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   };
   return (
@@ -375,164 +729,10 @@ const CodeNames = ({ mysocket, game }) => {
             </div>
           ))}
           {clueBox()}
-          <div className="codex-guide">
-            <div className="codex-guide__row">
-              <Box
-                key={`codex-guide-upper-cell-start`}
-                className={`codex-guide__cell-start`}
-              >
-                Colours as your partner sees them:
-              </Box>
-              {[
-                "black",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "cream",
-                "black",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "black",
-              ].map((i, index) => (
-                <Box
-                  key={`codex-guide-upper-cellbox-${index}`}
-                  className={`codex-guide__cell codex-guide__cell--${i}`}
-                />
-              ))}
-            </div>
-            <div className="codex-guide__row codex-guide__row--middle">
-              <Box
-                key={`codex-guide-middle-cell-start`}
-                className={`codex-guide__cell-start`}
-              >
-                {" "}
-              </Box>
-              {Array(25)
-                .fill("")
-                .map((x, index) => (
-                  <Box
-                    key={`codex-guide-middle-cellbox-${index}`}
-                    className={`codex-guide__cell codex-guide__cell--middle`}
-                  >
-                    &#x2195;
-                  </Box>
-                ))}
-            </div>
-            <div className="codex-guide__row">
-              <Box
-                key={`codex-guide-lower-cell-start`}
-                className={`codex-guide__cell-start`}
-              >
-                Colours as you see them:
-              </Box>
-              {[
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "green",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "black",
-                "black",
-                "black",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-                "cream",
-              ].map((i, index) => (
-                <Box
-                  key={`codex-guide-lower-cellbox-${index}`}
-                  className={`codex-guide__cell codex-guide__cell--${i}`}
-                />
-              ))}
-            </div>
-          </div>
 
-          <TableContainer className="turnstable">
-            <Table stickyHeader aria-label="simple table">
-              <colgroup>
-                <col width="15%" />
-                <col width="10%" />
-                <col width="75%" />
-              </colgroup>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Clue</TableCell>
-                  <TableCell align="left">To Find</TableCell>
-                  <TableCell align="left">Guesses Made</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {game.clues
-                  .slice(0)
-                  .reverse()
-                  .map((oldclue, index) => (
-                    <TableRow
-                      key={`${oldclue}${index}`}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell align="left">
-                        <Box className="guess guess--last">{oldclue[1]}</Box>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Box className="cluecount">{oldclue[2]}</Box>
-                      </TableCell>
-                      <TableCell align="left">
-                        <Box
-                          className="guesses"
-                          sx={{
-                            display: "flex",
-                            alignContent: "flex-start",
-                            flexWrap: "wrap",
-                          }}
-                        >
-                          {oldclue.length > 3
-                            ? oldclue[3].map((i, index) => (
-                                <Box
-                                  key={`oldclue-box-${index}`}
-                                  className={`guess guess--${game.revealed[i]}`}
-                                >
-                                  {i}
-                                </Box>
-                              ))
-                            : ""}
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {game.playercount === 2 ? codexClueBox() : ""}
+
+          {cluesHistory()}
           {resetGameButton()}
         </div>
         {game.playercount === 4 ? playersBox("blue") : playersBox("right")}

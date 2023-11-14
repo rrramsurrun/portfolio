@@ -228,6 +228,18 @@ async function endTurn(io, socket, args) {
   }
 }
 
+async function sendFullCodex(io, socket, args) {
+  const game = await loadGame({ userIds: args.userId });
+  if (!game) {
+    socket.emit("errormsg", "You are not registered on a game");
+    return;
+  }
+  const fullCodex = "";
+  if (fullCodex) {
+    socket.emit("sendFullCodex", fullCodex);
+  }
+}
+
 function manageGame(io, socket) {
   //New Game
   socket.on("newGame", (args) => {
@@ -299,6 +311,13 @@ function manageGame(io, socket) {
       endTurn(io, socket, args);
     }
   });
+
+  //Request full codex
+  socket.on("requestFullCodex", (args) => {
+    if (keyCheck("requestFullCodex", socket, args)) {
+      sendFullCodex(io, socket, args);
+    }
+  });
 }
 
 function keyCheck(requestType, socket, args) {
@@ -315,7 +334,8 @@ function keyCheck(requestType, socket, args) {
     .set("requestNewWords", ["userId"])
     .set("sendClue", ["userId", "clue", "clueCount"])
     .set("clickWord", ["userId", "wordIndex"])
-    .set("endTurn", ["userId"]);
+    .set("endTurn", ["userId"])
+    .set("requestFullCodex", ["userId"]);
   if (
     keysMap.get(requestType).every((key) => Object.keys(args).includes(key))
   ) {

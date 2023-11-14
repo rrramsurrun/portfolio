@@ -60,7 +60,7 @@ class Game {
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]
-    this.revealed = {};
+    this.revealed = Array(25);
     this.resetGameSurvey = Array(4).fill(false);
     this.win = null;
     this.turn = Math.random() < 0.5 ? 0 : 2;
@@ -239,24 +239,39 @@ class Game {
     });
   }
   endTurn(userId) {
-    if (this.userIds.indexOf(userId) === this.turn) {
-      this.turn = (this.turn + 1) % 4;
-      return true;
-    } else {
-      return false;
+    let userpos = this.userIds.indexOf(userId);
+    if (this.playercount === 4) {
+      if (userpos === this.turn) {
+        this.turn = (this.turn + 1) % 4;
+        return true;
+      } else {
+        return false;
+      }
+    }
+    if (this.playercount === 2) {
+      if (userpos + this.turn === 3) {
+        this.turn = (this.turn + 1) % 4;
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
   clickWord(userId, i) {
     let userpos = this.userIds.indexOf(userId);
-    if (userpos === this.turn) {
+
+    if (
+      (this.playercount === 4 && userpos === this.turn) ||
+      (this.playercount === 2 && userpos + this.turn === 3)
+    ) {
       const word = this.words[i];
       let color;
       if (this.playercount === 4) {
         //Find word color
         color = this.codex[word] ?? "cream";
         //Update revealed list
-        this.revealed[word] = [color];
+        this.revealed[i] = color;
         //apply game logic to word choice
         if (
           color === "cream" ||
@@ -268,43 +283,57 @@ class Game {
         } else if (color === "black") {
           //selected assassin card, end game
           this.win = this.turn === 1 ? "blue" : "red";
+          this.populateRevealed();
         }
         //check for win status
         if (
-          Object.entries(this.revealed).filter((wordArr) => wordArr == "blue")
-            .length === (this.firstTurn === "blue" ? 9 : 8)
+          this.revealed.filter((wordcolor) => wordcolor == "blue").length ===
+          (this.firstTurn === "blue" ? 9 : 8)
         ) {
           this.win = "blue";
+          this.populateRevealed();
         }
         if (
-          Object.entries(this.revealed).filter((wordArr) => wordArr == "red")
-            .length === (this.firstTurn === "red" ? 9 : 8)
+          this.revealed.filter((wordcolor) => wordcolor == "red").length ===
+          (this.firstTurn === "red" ? 9 : 8)
         ) {
           this.win = "red";
+          this.populateRevealed();
         }
       }
       if (this.playercount === 2) {
         //Find the colour of the word on the partner's codex
         userpos = userpos === 2 ? 1 : 0;
         const otherpos = userpos === 1 ? 0 : 1;
-        color = this.codex.get(this.words[i])[otherpos];
-        //Update revealed list for this user
-        this.revealed[i][userpos] = [this.words[i], color];
+        color = this.codex[word][otherpos];
+        const owncolor = this.codex[word][userpos];
+        //if undefined, create an array
+        if (this.revealed[i] === null) {
+          this.revealed[i] = [];
+        }
+        //add color to other array (mirroring the codex)
+        this.revealed[i][otherpos] = color;
+
         if (color === "black") {
           //Selected Assassin card
           this.win = "lose";
+          this.populateRevealed();
         } else if (color === "cream") {
           //Selected civillian card
           this.endTurn(userId);
         } else if (color === "green") {
-          //Update revealed list for other user
-          this.revealed[i][otherpos] = [this.words[i], color];
           //check for win condition
           if (
-            this.revealed.filter((wordArr) => wordArr[1] == "green").length ===
-            9
+            this.revealed.filter(
+              (wordcolor) => wordcolor !== null && wordcolor[0] === "green"
+            ).length +
+              this.revealed.filter(
+                (wordcolor) => wordcolor !== null && wordcolor[1] === "green"
+              ).length ===
+            18
           ) {
-            this.win = "red";
+            this.win = "win";
+            this.populateRevealed();
           }
         }
       }
@@ -319,6 +348,24 @@ class Game {
       return true;
     } else {
       return false;
+    }
+  }
+  populateRevealed() {
+    if (this.playercount === 2) {
+      for (const [k, v] of Object.entries(this.codex)) {
+        const i = this.words.indexOf(k);
+        if (this.revealed[i] === null) {
+          this.revealed[i] = [];
+        }
+        this.revealed[i][0] = v[0];
+        this.revealed[i][1] = v[1];
+      }
+    }
+    if (this.playercount === 4) {
+      for (const [k, v] of Object.entries(this.codex)) {
+        const i = this.words.indexOf(k);
+        this.revealed[i] = v ?? "cream";
+      }
     }
   }
   sendClue(userId, clueArr) {
@@ -352,9 +399,11 @@ class Game {
       }
       return this.setAndReturnUser(x, nickname);
     }
-    return (
-      this.setAndReturnUser(0, nickname) && this.setAndReturnUser(2, nickname)
-    );
+    const tempId = this.setAndReturnUser(0, nickname);
+    if (tempId === false) {
+      return this.setAndReturnUser(2, nickname);
+    }
+    return tempId;
   }
   setAndReturnUser(x, nickname) {
     if (this.userIds[x] === undefined || this.userIds[x] === null) {
