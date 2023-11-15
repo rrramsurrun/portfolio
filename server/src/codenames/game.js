@@ -325,12 +325,11 @@ class Game {
           //check for win condition
           if (
             this.revealed.filter(
-              (wordcolor) => wordcolor !== null && wordcolor[0] === "green"
-            ).length +
-              this.revealed.filter(
-                (wordcolor) => wordcolor !== null && wordcolor[1] === "green"
-              ).length ===
-            18
+              (wordcolor) =>
+                wordcolor !== null &&
+                (wordcolor[0] === "green" ||
+                  (wordcolor.length === 2 && wordcolor[1] === "green"))
+            ).length === 15
           ) {
             this.win = "win";
             this.populateRevealed();

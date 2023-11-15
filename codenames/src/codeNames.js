@@ -261,6 +261,7 @@ const CodeNames = ({ mysocket, game }) => {
         i,
         word,
         false,
+        false,
         game.revealed[i][0],
         game.revealed[i][1]
       );
@@ -388,6 +389,10 @@ const CodeNames = ({ mysocket, game }) => {
   const lastClueBox = () => {
     if (game.clues.length > 0) {
       const lastClue = game.clues[game.clues.length - 1];
+      const yourturn =
+        game.playercount === 2
+          ? game.turn + game.role === 3
+          : game.turn === game.role;
       return (
         <div className="lastcluebox">
           {game.turn - 1 === 0
@@ -396,8 +401,10 @@ const CodeNames = ({ mysocket, game }) => {
           <div>gave the clue</div>
           <div className="guess guess--last">{lastClue[1]}</div>
           <div>{`to reveal ${lastClue[2]} words`}</div>
-          {game.turn === game.role ? (
-            <button onClick={() => endTurn()}>End Turn</button>
+          {yourturn ? (
+            <button className="endturnbox" onClick={() => endTurn()}>
+              End Turn
+            </button>
           ) : (
             ""
           )}
@@ -676,30 +683,34 @@ const CodeNames = ({ mysocket, game }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {game.clues
-              .slice(0)
-              .reverse()
-              .map((oldclue, index) => (
-                <TableRow
-                  key={`${oldclue}${index}`}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell align="left">
-                    <Box className="guess guess--last">
-                      {game.nicknames[oldclue[0]]}
-                    </Box>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Box className="guess guess--last">{oldclue[1]}</Box>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Box className="cluecount">{oldclue[2]}</Box>
-                  </TableCell>
-                  <TableCell align="left">{cluesHistoryBox(oldclue)}</TableCell>
-                </TableRow>
-              ))}
+            {game.clues.length > 0
+              ? game.clues
+                  .slice(0)
+                  .reverse()
+                  .map((oldclue, index) => (
+                    <TableRow
+                      key={`${oldclue}${index}`}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell align="left">
+                        <Box className="guess guess--last">
+                          {game.nicknames[oldclue[0]]}
+                        </Box>
+                      </TableCell>
+                      <TableCell align="left">
+                        <Box className="guess guess--last">{oldclue[1]}</Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box className="cluecount">{oldclue[2]}</Box>
+                      </TableCell>
+                      <TableCell align="left">
+                        {cluesHistoryBox(oldclue)}
+                      </TableCell>
+                    </TableRow>
+                  ))
+              : ""}
           </TableBody>
         </Table>
       </TableContainer>

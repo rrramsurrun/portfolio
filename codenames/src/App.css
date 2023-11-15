@@ -264,7 +264,9 @@
   font-weight: bold;
   text-shadow: 0.5px 0.5px 2px;
 }
-
+.endturnbox {
+  margin-left: 50px;
+}
 .lastcluebox {
   display: flex;
   justify-content: center;

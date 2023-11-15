@@ -218,7 +218,7 @@ async function endTurn(io, socket, args) {
     return;
   }
 
-  if (!game.endTurn(socket.id)) {
+  if (!game.endTurn(args.userId)) {
     socket.emit("errormsg", "It is not even your turn");
   }
   if (await game.gameUpload()) {
