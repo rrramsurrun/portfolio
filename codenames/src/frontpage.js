@@ -40,7 +40,7 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
     const buttonRole = colour + " " + role;
     return (
       <button
-        className={`usercard select-player-${colour} ${
+        className={`usercard usercard--${colour} ${
           buttonRole === temprole ? "selected" : ""
         }`}
         onClick={() => settemprole(buttonRole)}
@@ -52,7 +52,7 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
   const selectedPlayer = (nickname, colour, role) => {
     // const buttonRole = colour + " " + role;
     return (
-      <div className={`select-player-${colour}`}>
+      <div className={`usercard usercard--${colour}`}>
         <div className={`playertitle playertitle-${colour}`}>{role}</div>
         <div className={"playername"}>{nickname}</div>
       </div>
@@ -115,136 +115,163 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
 
   if (gamestatus === "selectrole") {
     return (
-      <div className="introbuttons">
-        <input
-          className="nameinput"
-          placeholder="Username"
-          onChange={(e) => settempnickname(e.target.value)}
-          key="nameinput"
-        />
-        {userRoles(foundgame.nicknames, foundgame.playercount)}
+      <div className="frontpage">
+        <div className="title">Codenames</div>
+        <div className="introbuttons">
+          <input
+            className="nameinput"
+            placeholder="Username"
+            onChange={(e) => settempnickname(e.target.value)}
+            key="nameinput"
+          />
+          {userRoles(foundgame.nicknames, foundgame.playercount)}
 
-        <button
-          type="button"
-          className="frontbutton"
-          disabled={
-            tempnickname === "" ||
-            (temprole === "" && foundgame.playercount === 4)
-          }
-          onClick={submitRequest}
-        >
-          Join Game
-        </button>
-        <button
-          className="frontbutton"
-          onClick={() => console.log("not yet determined")}
-        >
-          Cancel join
-        </button>
-        {errormsg ? <div>{errormsg}</div> : ""}
+          <button
+            type="button"
+            className="frontbutton"
+            disabled={
+              tempnickname === "" ||
+              (temprole === "" && foundgame.playercount === 4)
+            }
+            onClick={submitRequest}
+          >
+            Join Game
+          </button>
+          <button
+            className="frontbutton"
+            onClick={() => console.log("not yet determined")}
+          >
+            Cancel join
+          </button>
+          {errormsg ? <div>{errormsg}</div> : ""}
+        </div>
       </div>
     );
   }
 
   if (requestType === "newGame") {
     return (
-      <div className="introbuttons">
-        <input
-          className="nameinput"
-          placeholder="Username"
-          onChange={(e) => settempnickname(e.target.value)}
-        />
-        {userRoles(false, playercount)}
+      <div className="frontpage">
+        <div className="title">Codenames</div>
+        <div className="introbuttons">
+          <div className="introbuttons__row">
+            <button
+              className={`frontbutton ${
+                playercount === 4 ? "frontbutton--red" : ""
+              }`}
+              onClick={() => setplayercount(4)}
+            >
+              4-player
+            </button>
+            <button
+              className={`frontbutton ${
+                playercount === 2 ? "frontbutton--green" : ""
+              }`}
+              onClick={() => setplayercount(2)}
+            >
+              2-player
+            </button>
+          </div>
+          <input
+            className="nameinput"
+            placeholder="Username"
+            onChange={(e) => settempnickname(e.target.value)}
+          />
+          {userRoles(false, playercount)}
+          <button
+            className="frontbutton"
+            type="button"
+            disabled={
+              tempnickname === "" || (temprole === "" && playercount === 4)
+            }
+            onClick={submitRequest}
+          >
+            {`Create ${playercount}-player game`}
+          </button>
 
-        <button
-          className="frontbutton"
-          type="button"
-          disabled={
-            tempnickname === "" || (temprole === "" && playercount === 4)
-          }
-          onClick={submitRequest}
-        >
-          {`Create ${playercount}-player game with these details`}
-        </button>
+          {errormsg ? <div>{errormsg}</div> : ""}
 
-        {errormsg ? <div>{errormsg}</div> : ""}
-        <button
-          className="frontbutton"
-          onClick={() => setplayercount(playercount === 4 ? 2 : 4)}
-        >
-          {`Switch to ${playercount === 4 ? 2 : 4}-player game`}
-        </button>
-        <button
-          className="frontbutton"
-          onClick={() => setrequestType("findGame")}
-        >
-          Join Game Instead
-        </button>
+          <button
+            className="frontbutton"
+            onClick={() => setrequestType("findGame")}
+          >
+            Join Game Instead
+          </button>
+        </div>
       </div>
     );
   }
 
   if (requestType === "findGame") {
     return (
-      <div className="introbuttons">
-        <input
-          className="nameinput"
-          placeholder="Game ID"
-          onChange={(e) => setroom(e.target.value)}
-          key="roomname"
-        />
+      <div className="frontpage">
+        <div className="title">Codenames</div>
+        <div className="introbuttons">
+          <input
+            className="nameinput"
+            placeholder="Game ID"
+            onChange={(e) => setroom(e.target.value)}
+            key="roomname"
+          />
 
-        <button
-          className="frontbutton"
-          type="button"
-          disabled={!room}
-          onClick={submitRequest}
-        >
-          Find game
-        </button>
+          <button
+            className="frontbutton"
+            type="button"
+            disabled={!room}
+            onClick={submitRequest}
+          >
+            Find game
+          </button>
 
-        {errormsg ? <div>{errormsg}</div> : ""}
-        <button
-          className="frontbutton"
-          onClick={() => setrequestType("newGame")}
-        >
-          Create game instead
-        </button>
+          {errormsg ? <div>{errormsg}</div> : ""}
+          <button
+            className="frontbutton"
+            onClick={() => setrequestType("newGame")}
+          >
+            Create game instead
+          </button>
+        </div>
       </div>
     );
   }
 
   //before user has selected create vs join
   return (
-    <div className="introbuttons">
-      <div className="introbuttons__row">
+    <div className="frontpage">
+      <div className="title">Codenames</div>
+      <div className="introbuttons">
+        <div className="introbuttons__row">
+          <button
+            className={`frontbutton ${
+              playercount === 4 ? "frontbutton--red" : ""
+            }`}
+            onClick={() => setplayercount(4)}
+          >
+            4-player
+          </button>
+          <button
+            className={`frontbutton ${
+              playercount === 2 ? "frontbutton--green" : ""
+            }`}
+            onClick={() => setplayercount(2)}
+          >
+            2-player
+          </button>
+        </div>
         <button
-          className={`frontbutton ${
-            playercount === 4 ? "frontbutton--red" : ""
-          }`}
-          onClick={() => setplayercount(4)}
+          className="frontbutton"
+          onClick={() => setrequestType("newGame")}
         >
-          4-player
+          New Game
         </button>
         <button
-          className={`frontbutton ${
-            playercount === 2 ? "frontbutton--green" : ""
-          }`}
-          onClick={() => setplayercount(2)}
+          className="frontbutton"
+          onClick={() => setrequestType("findGame")}
         >
-          2-player
+          Join Game
         </button>
+        {errormsg ? <div>{errormsg}</div> : ""}
       </div>
-      <button className="frontbutton" onClick={() => setrequestType("newGame")}>
-        New Game
-      </button>
-      <button
-        className="frontbutton"
-        onClick={() => setrequestType("findGame")}
-      >
-        Join Game
-      </button>
-      {errormsg ? <div>{errormsg}</div> : ""}
     </div>
   );
 };

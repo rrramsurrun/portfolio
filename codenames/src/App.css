@@ -2,42 +2,52 @@
   margin-left: auto;
   margin-right: auto;
 }
-.headerbox {
+@media only screen and (max-width: 600px) {
+  .frontpage {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .introbuttons {
+    /* align-items: ; */
+    min-width: 90%;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .frontpage {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .introbuttons {
+    width: 40%;
+  }
+}
+.title {
+  font-size: 3em;
+}
+
+.introbuttons__row {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-}
-.shareButton {
-  margin-left: 5px;
-}
-
-.shareButton:hover {
-  opacity: 70%;
-  cursor: pointer;
-}
-.clipboardnotice {
-  opacity: 50%;
-}
-
-.nameinput {
-  border-style: solid;
-  border-color: #282c34;
-  border-radius: 10px;
-  font-size: 1em;
-  height: 3em;
   width: 100%;
-  margin: 2px;
 }
 .frontbutton {
   border-style: solid;
   border-color: #282c34;
   border-radius: 10px;
-
-  font-size: 1em;
-
+  font-size: 1.3em;
   height: 3em;
   width: 100%;
-  margin: 2px;
+  margin: 5px 0px;
 }
 .frontbutton--red {
   background-color: maroon;
@@ -51,20 +61,93 @@
   opacity: 80%;
   border-width: 1px;
 }
-.introbuttons {
-  margin-top: 10%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 30%;
-  margin-left: auto;
-  margin-right: auto;
-  /* align-items: ; */
+
+.nameinput {
+  border-style: solid;
+  border-color: #282c34;
+  border-radius: 10px;
+  font-size: 1em;
+  height: 3em;
+  width: 100%;
+  box-sizing: border-box;
 }
-.introbuttons__row {
+.userroles {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   width: 100%;
+}
+.select-player-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 2px;
+}
+.usercard {
+  width: 100%;
+  height: 3em;
+  margin: 2px;
+  font-size: 1.1em;
+  border-radius: 10px;
+  border-style: none;
+  opacity: 80%;
+}
+.select-player {
+  border-radius: 10px;
+}
+.usercard--red {
+  color: lightsalmon;
+  background-color: #c41e3a;
+}
+.usercard--blue {
+  color: cyan;
+  background-color: #6699cc;
+}
+.usercard--green {
+  background-color: #90ee90;
+}
+.selected {
+  color: white;
+  border-style: solid;
+  border-color: black;
+  border-width: 0.2em;
+  opacity: 100%;
+}
+/* Join Game Board */
+.playertitle {
+  text-transform: capitalize;
+  font-size: 1.1em;
+  margin: 0 0.2em;
+}
+.playertitle-red {
+  color: lightsalmon;
+}
+.playertitle-blue {
+  color: cyan;
+}
+.playertitle-green {
+  color: white;
+}
+.playername {
+  color: white;
+  margin: 0 0.4em;
+}
+
+.headerbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.shareButton {
+  margin-left: 0.5em;
+}
+
+.shareButton:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+.clipboardnotice {
+  opacity: 50%;
 }
 
 .gamescreen {
@@ -223,24 +306,6 @@
   margin: 2px;
 }
 
-.playertitle {
-  text-transform: capitalize;
-  font-size: 1.1em;
-  margin: 5px;
-}
-.playertitle-red {
-  color: lightsalmon;
-}
-.playertitle-blue {
-  color: cyan;
-}
-.playertitle-green {
-  color: white;
-}
-.playername {
-  color: white;
-  margin: 5px;
-}
 .waitbox {
   display: flex;
   justify-content: center;
@@ -397,55 +462,6 @@
 }
 .wordcard--end {
   opacity: 60%;
-}
-.select-player-row {
-  display: flex;
-  align-items: stretch;
-  flex-direction: row;
-  width: 300px;
-  display: flex;
-
-  border-radius: 5px;
-  margin: 20px;
-  /* relative to siblings */
-  flex-basis: 15%;
-}
-
-.selected {
-  opacity: 50%;
-}
-
-.userroles {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-}
-.select-player-column {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0 2px;
-}
-.usercard {
-  width: 100%;
-  height: 3em;
-  margin: 2px;
-  font-size: 1.1em;
-}
-.select-player-red {
-  color: lightsalmon;
-  background-color: #c41e3a;
-  border-radius: 3px;
-}
-.select-player-blue {
-  color: cyan;
-  background-color: #6699cc;
-  border-radius: 3px;
-}
-.select-player-green {
-  background-color: #90ee90;
-  border-radius: 3px;
 }
 
 .cluecount {
