@@ -41,7 +41,9 @@ async function joinGame(io, socket, game, args) {
     return;
   }
   socket.join(game.room);
+  console.log("Sending join game response");
   socket.emit("joinGameResponse", game.gameJoinData(userId));
+  console.log("Sending game Update response");
   io.to(game.room).emit("gameUpdate", game.gameUpdate());
 }
 
@@ -112,6 +114,8 @@ async function requestNewWords(socket, args) {
   }
 
   const packet = game.gameJoinPacket(args.userId);
+  console.log(packet);
+  console.log(JSON.stringify(packet));
   socket.emit("gameUpdate", JSON.stringify(packet));
   socket.emit("gameUpdate", game.gameUpdate());
 }

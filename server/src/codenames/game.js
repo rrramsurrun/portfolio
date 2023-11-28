@@ -57,6 +57,7 @@ class Game {
     //reset with resetGameboard
     this.words = [];
     this.codex = {};
+    this.firstTurn = "";
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]
@@ -206,6 +207,7 @@ class Game {
       role: this.userIds.indexOf(id),
       words: this.words,
       codex: this.sendCodex(id),
+      firstTurn: this.firstTurn,
     });
   }
   gameJoinPacket(id) {

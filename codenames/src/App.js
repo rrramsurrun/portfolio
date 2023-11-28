@@ -15,6 +15,12 @@ function App(args) {
   const [gamedata, setGamedata] = useState(null);
 
   useEffect(() => {
+    if (gamestatus === "cancelJoin") {
+      setfoundgame(null);
+      setgame(null);
+      window.location.href = "/";
+      return;
+    }
     if (gamestatus !== "frontpage") {
       return;
     }
@@ -50,7 +56,6 @@ function App(args) {
           newergame[k] = gamedata[k];
         }
         setgame(newergame);
-        console.log(newergame);
       } else {
         setgame(gamedata);
       }
@@ -121,6 +126,7 @@ function App(args) {
               mysocket={mysocket}
               foundgame={foundgame}
               errormsg={errormsg}
+              setGamestatus={setGamestatus}
             />
           )}
         </div>

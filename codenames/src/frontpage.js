@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 // import ReactDOM from "react-dom";
 
-const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
+const FrontPage = ({
+  gamestatus,
+  mysocket,
+  foundgame,
+  errormsg,
+  setGamestatus,
+}) => {
   const [requestType, setrequestType] = useState(null);
   const [room, setroom] = useState(null);
 
@@ -139,7 +145,7 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
           </button>
           <button
             className="frontbutton"
-            onClick={() => console.log("not yet determined")}
+            onClick={() => setGamestatus("cancelJoin")}
           >
             Cancel join
           </button>

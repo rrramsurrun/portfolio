@@ -139,7 +139,7 @@ const CodeNames = ({ mysocket, game }) => {
   const cluecountCard = (colour) => {
     let total;
     let guessed;
-    if (game.firstTurn === 0) {
+    if (game.firstTurn === "red") {
       total = colour === "red" ? 9 : 8;
     } else {
       total = colour === "red" ? 8 : 9;
@@ -700,9 +700,9 @@ const CodeNames = ({ mysocket, game }) => {
                   .map((oldclue, index) => (
                     <TableRow
                       key={`${oldclue}${index}`}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
+                      // sx={{
+                      //   "&:last-child td, &:last-child th": { border: 0 },
+                      // }}
                     >
                       <TableCell align="left">
                         <Box className="guess guess--last">
