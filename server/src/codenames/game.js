@@ -53,11 +53,11 @@ class Game {
     this.userIds = Array(4);
     this.nicknames = Array(4);
     //Values that are reset with a new game
+    this.firstTurn = "";
     this.resetGamestate();
     //reset with resetGameboard
     this.words = [];
     this.codex = {};
-    this.firstTurn = "";
   }
   resetGamestate() {
     //Array of pairs - [[word, colour],...]

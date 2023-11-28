@@ -720,7 +720,7 @@ const CodeNames = ({ mysocket, game }) => {
                       </TableCell>
                     </TableRow>
                   ))
-              : ""}
+              : null}
           </TableBody>
         </Table>
       </TableContainer>

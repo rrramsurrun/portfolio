@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 // import SocketHandler from "./socketHandler";
 import { mysocket } from "./socketHandler";
 import FrontPage from "./frontpage";
@@ -11,13 +11,39 @@ function App(args) {
   const [foundgame, setfoundgame] = useState(null);
   const [errormsg, seterrormsg] = useState(null);
   const [gamestatus, setGamestatus] = useState("frontpage");
-  const [game, setgame] = useState(null);
-  const [gamedata, setGamedata] = useState(null);
+  const [game, setGame] = useReducer(gameUpdate, null);
+
+  function gameUpdate(state, action) {
+    if (action.type === "clear") {
+      return null;
+    }
+    if (action.type === "update") {
+      if (state) {
+        const newergame = _.cloneDeep(state);
+        for (const k in action.payload) {
+          newergame[k] = action.payload[k];
+        }
+        return newergame;
+      } else {
+        return action.payload;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const keysArr = ["nicknames", "words", "revealed"];
+    if (game) {
+      if (keysArr.every((key) => Object.keys(game).includes(key))) {
+        setGamestatus("playgame");
+        setfoundgame(null);
+      }
+    }
+  }, [game]);
 
   useEffect(() => {
     if (gamestatus === "cancelJoin") {
       setfoundgame(null);
-      setgame(null);
+      setGame({ type: "clear", payload: null });
       window.location.href = "/";
       return;
     }
@@ -34,63 +60,34 @@ function App(args) {
   }, [gamestatus]);
 
   useEffect(() => {
-    if (game) {
-      // console.log(game);
-      if (
-        Object.keys(game).includes("nicknames") &&
-        Object.keys(game).includes("words")
-      ) {
-        setGamestatus("playgame");
-        setfoundgame(null);
-      }
-    }
-  }, [game]);
-
-  // Update game when gamedata comes through
-  useEffect(() => {
-    if (gamedata) {
-      if (game) {
-        // console.log(`Overwriting ${game.header} with ${gamedata.header}`);
-        const newergame = _.cloneDeep(game);
-        for (const k in gamedata) {
-          newergame[k] = gamedata[k];
-        }
-        setgame(newergame);
-      } else {
-        setgame(gamedata);
-      }
-    }
-  }, [gamedata]);
-
-  useEffect(() => {
     mysocket.on("joinGameResponse", (msg) => {
       const data = JSON.parse(msg);
       localStorage.setItem("codenamesUserId", data.userId);
-
       mysocket.userId = data.userId;
-      setGamedata(data);
+      setGame({ type: "update", payload: data });
     });
     mysocket.on("findGameResponse", (msg) => {
       const data = JSON.parse(msg);
       setfoundgame(data);
+      setGame({ type: "update", payload: data });
       setGamestatus("selectrole");
     });
 
     mysocket.on("leaveGameResponse", (msg) => {
       const data = JSON.parse(msg);
-
       if (data.userId === localStorage.getItem("codenamesUserId")) {
         localStorage.removeItem("codenamesUserId");
-        setgame(null);
+        setGame({ type: "clear", payload: null });
         setGamestatus("frontpage");
-        // window.location.href = "/";
+        window.location.href = "/";
       } else {
         seterrormsg("Leave game failed, please try again");
       }
     });
     mysocket.on("gameUpdate", (msg) => {
       const data = JSON.parse(msg);
-      setGamedata(data);
+      setGame({ type: "update", payload: data });
+      // setGamedata(data);
     });
     mysocket.on("resetGameResponse", () => {
       mysocket.requestNewWords();
