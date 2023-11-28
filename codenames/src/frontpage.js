@@ -209,7 +209,7 @@ const FrontPage = ({ gamestatus, mysocket, foundgame, errormsg }) => {
         <div className="introbuttons">
           <input
             className="nameinput"
-            placeholder="Game ID"
+            placeholder="Room Name"
             onChange={(e) => setroom(e.target.value)}
             key="roomname"
           />

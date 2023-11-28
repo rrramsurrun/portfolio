@@ -16,6 +16,12 @@
     /* align-items: ; */
     min-width: 90%;
   }
+  .headerbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5em 1em;
+  }
 }
 @media only screen and (min-width: 600px) {
   .frontpage {
@@ -29,6 +35,12 @@
   }
   .introbuttons {
     width: 40%;
+  }
+  .headerbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0.5em 1em;
   }
 }
 .title {
@@ -133,11 +145,6 @@
   margin: 0 0.4em;
 }
 
-.headerbox {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 .shareButton {
   margin-left: 0.5em;
 }
@@ -149,10 +156,17 @@
 .clipboardnotice {
   opacity: 50%;
 }
-
-.gamescreen {
-  display: flex;
-  flex-direction: row;
+@media only screen and (max-width: 700px) {
+  .gamescreen {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media only screen and (min-width: 700px) {
+  .gamescreen {
+    display: flex;
+    flex-direction: row;
+  }
 }
 .cards {
   display: flex;
@@ -200,33 +214,31 @@
 .codex-guide__cell--black {
   background-color: hsla(240, 8%, 3%, 0.781);
 }
-
-.players {
-  /*Box containing player cards*/
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-basis: 15%;
-  flex-grow: 1;
-  margin: 1%;
+@media only screen and (max-width: 700px) {
+  .players-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .players {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+  }
+}
+@media only screen and (min-width: 700px) {
+  .players-box {
+    flex-basis: 15%;
+    flex-grow: 1;
+    margin: 1%;
+  }
+  .players {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 
-.resetgamebutton {
-  background-color: #90ee90;
-  border-radius: 5px;
-  padding: 5px;
-  flex-grow: 1;
-  text-align: center;
-  margin: 0px 2px;
-}
-.resetgamebutton:hover {
-  cursor: pointer;
-}
-.resetresponses {
-  align-self: flex-end;
-  display: flex;
-  flex-direction: row;
-}
 .players-red {
   background-color: #c41e3a;
 }
@@ -241,8 +253,14 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  height: 4.5em;
 }
-
+.playercard-turn {
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: rgb(189, 156, 113);
+  border-width: 0.5em;
+}
 .playerdetails {
   display: flex;
   flex-direction: column;
@@ -252,6 +270,20 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.resetgamebutton {
+  background-color: #90ee90;
+  border-radius: 5px;
+  flex-grow: 1;
+  text-align: center;
+}
+.resetgamebutton:hover {
+  cursor: pointer;
+}
+.resetresponses {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: row;
 }
 .exitbutton {
   margin: 10px;
@@ -284,26 +316,6 @@
 .confirmexitbutton:hover {
   opacity: 70%;
   cursor: pointer;
-}
-
-.playercard-red {
-  background-color: #c41e3a;
-  border-radius: 3px;
-}
-.playercard-blue {
-  background-color: #6699cc;
-  border-radius: 3px;
-}
-.playercard-green {
-  background-color: darkgreen;
-  border-radius: 3px;
-}
-.playercard-turn {
-  /* box-shadow: 2px 2px white; alternative option*/
-  border-style: outset;
-  border-color: antiquewhite;
-  border-radius: 3px;
-  margin: 2px;
 }
 
 .waitbox {

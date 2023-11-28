@@ -50,6 +50,7 @@ function App(args) {
           newergame[k] = gamedata[k];
         }
         setgame(newergame);
+        console.log(newergame);
       } else {
         setgame(gamedata);
       }

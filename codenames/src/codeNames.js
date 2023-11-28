@@ -15,6 +15,26 @@ const CodeNames = ({ mysocket, game }) => {
   const [clueCount, setclueCount] = useState("");
   const [leaveGameCheck, setleaveGameCheck] = useState(false);
   const [clipboardNote, setclipboardNote] = useState(false);
+  const [narrowScreen, setnarrowScreen] = useState(false);
+
+  useEffect(() => {
+    const mediaWatcher = window.matchMedia("(max-width: 700px)");
+    setnarrowScreen(mediaWatcher.matches);
+    function updateNarrowScreen(e) {
+      setnarrowScreen(e.matches);
+    }
+    if (mediaWatcher.addEventListener) {
+      mediaWatcher.addEventListener("change", updateNarrowScreen);
+      return function cleanup() {
+        mediaWatcher.removeEventListener("change", updateNarrowScreen);
+      };
+    } else {
+      mediaWatcher.addListener(updateNarrowScreen);
+      return function cleanup() {
+        mediaWatcher.removeListener(updateNarrowScreen);
+      };
+    }
+  });
 
   useEffect(() => {
     if (leaveGameCheck) {
@@ -56,7 +76,7 @@ const CodeNames = ({ mysocket, game }) => {
       colour = "green";
     }
     return (
-      <div className={`playerdetails-plain playercard-${colour}`}>
+      <div className={`playerdetails-plain`}>
         <div className={`playertitle playertitle-${colour}`}>
           {game.playercount === 2
             ? "Spy"
@@ -72,12 +92,8 @@ const CodeNames = ({ mysocket, game }) => {
   };
   const playerCard = (i, colour) => {
     return (
-      <div
-        className={`playercard playercard-${colour} ${
-          game.turn === i ? "playercard-turn" : ""
-        }`}
-      >
-        <div className={`playerdetails playercard-${colour}`}>
+      <div className={`playercard ${game.turn === i ? "playercard-turn" : ""}`}>
+        <div className={`playerdetails`}>
           <div className={`playertitle playertitle-${colour}`}>
             {game.playercount === 2
               ? "Spy"
@@ -486,9 +502,7 @@ const CodeNames = ({ mysocket, game }) => {
     return (
       <div className="resetresponses">
         <div className="resetgamebutton" onClick={() => resetGame()}>
-          {game.win !== null
-            ? "Click here for a rematch"
-            : "Click here to reset the game"}
+          {game.win !== null ? "Another Game" : "Reset Game"}
         </div>
       </div>
     );
@@ -506,21 +520,17 @@ const CodeNames = ({ mysocket, game }) => {
   const playersBox = (colour) => {
     if (colour === "left" || colour === "right") {
       return (
-        <div className="players">
-          <div className={`players-green`}>
-            {playerCard(colour === "left" ? 0 : 2, "green")}
-          </div>
+        <div className="players players-green">
+          {playerCard(colour === "left" ? 0 : 2, "green")}
         </div>
       );
     }
     const firstPlayer = colour === "red" ? 0 : 2;
     return (
-      <div className="players">
-        <div className={`players-${colour}`}>
-          {playerCard(firstPlayer, colour)}
-          {playerCard(firstPlayer + 1, colour)}
-          {cluecountCard(colour)}
-        </div>
+      <div className={`players players-${colour}`}>
+        {playerCard(firstPlayer, colour)}
+        {playerCard(firstPlayer + 1, colour)}
+        {cluecountCard(colour)}
       </div>
     );
   };
@@ -719,18 +729,29 @@ const CodeNames = ({ mysocket, game }) => {
   return (
     <div>
       <div className="headerbox">
-        <div className="roomname">{`You are in room ${game.room}`}</div>
-        <IconCopy className="shareButton" onClick={() => clipboardFunction()} />
+        <div className="roomname">{`Room Name: ${game.room}`}</div>
 
         <div className="clipboardnotice">
-          {clipboardNote
-            ? "Linked copied to clipboard"
-            : "Click here for a link to share"}
+          <IconCopy
+            className="shareButton"
+            onClick={() => clipboardFunction()}
+          />
+          <span>
+            {clipboardNote ? "Linked copied to clipboard" : "Share Link"}
+          </span>
         </div>
+        {narrowScreen ? (game.role < 2 ? resetGameButton() : null) : null}
       </div>
       <div className="gamescreen">
-        {game.playercount === 4 ? playersBox("red") : playersBox("left")}
-
+        <div className="players-box">
+          {game.playercount === 4 ? playersBox("red") : playersBox("left")}
+          {narrowScreen ? null : game.role < 2 ? resetGameButton() : null}
+          {narrowScreen
+            ? game.playercount === 4
+              ? playersBox("blue")
+              : playersBox("right")
+            : null}
+        </div>
         <div className="cards">
           {[...Array(5).keys()].map((e) => (
             <div key={`wordrow ${e}`} className="wordsrow">
@@ -744,9 +765,13 @@ const CodeNames = ({ mysocket, game }) => {
           {game.playercount === 2 ? codexClueBox() : ""}
 
           {cluesHistory()}
-          {resetGameButton()}
         </div>
-        {game.playercount === 4 ? playersBox("blue") : playersBox("right")}
+        {narrowScreen ? null : (
+          <div className="players-box">
+            {game.playercount === 4 ? playersBox("blue") : playersBox("right")}
+            {game.role >= 2 ? resetGameButton() : null}
+          </div>
+        )}
       </div>
     </div>
   );
