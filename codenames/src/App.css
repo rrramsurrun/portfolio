@@ -16,12 +16,6 @@
     /* align-items: ; */
     min-width: 90%;
   }
-  .headerbox {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0.5em 1em;
-  }
 }
 @media only screen and (min-width: 600px) {
   .frontpage {
@@ -35,12 +29,6 @@
   }
   .introbuttons {
     width: 40%;
-  }
-  .headerbox {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 0.5em 1em;
   }
 }
 .title {
@@ -225,6 +213,18 @@
     flex-direction: column;
     width: 40%;
   }
+  .resetgamebutton {
+    background-color: #90ee90;
+    border-radius: 5px;
+    margin-left: 2em;
+    text-align: center;
+  }
+  .headerbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5em 1em;
+  }
 }
 @media only screen and (min-width: 700px) {
   .players-box {
@@ -236,6 +236,19 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+  .resetgamebutton {
+    background-color: #90ee90;
+    border-radius: 5px;
+    flex-grow: 1;
+    margin-top: 0.5em;
+    text-align: center;
+  }
+  .headerbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0.5em 1em;
   }
 }
 
@@ -266,17 +279,7 @@
   flex-direction: column;
   margin: 10px;
 }
-.playerdetails-plain {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.resetgamebutton {
-  background-color: #90ee90;
-  border-radius: 5px;
-  flex-grow: 1;
-  text-align: center;
-}
+
 .resetgamebutton:hover {
   cursor: pointer;
 }
@@ -486,6 +489,13 @@
   height: 1em;
   width: 1em;
   font-weight: bold;
+}
+.playerdetails-plain {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5em 1em;
+  border-radius: 3px;
 }
 .guess {
   /* border-style: solid; */

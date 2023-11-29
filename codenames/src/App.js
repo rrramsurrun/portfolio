@@ -41,6 +41,16 @@ function App(args) {
   }, [game]);
 
   useEffect(() => {
+    if (localStorage.getItem("codenamesUserId") !== null) {
+      mysocket.rejoinGame(localStorage.getItem("codenamesUserId"));
+    }
+
+    if (args.roomname !== null) {
+      mysocket.findGame(args.roomname);
+    }
+  }, [args.roomname]);
+
+  useEffect(() => {
     if (gamestatus === "cancelJoin") {
       setfoundgame(null);
       setGame({ type: "clear", payload: null });
@@ -49,13 +59,6 @@ function App(args) {
     }
     if (gamestatus !== "frontpage") {
       return;
-    }
-    if (localStorage.getItem("codenamesUserId") !== null) {
-      mysocket.rejoinGame(localStorage.getItem("codenamesUserId"));
-    }
-
-    if (args.roomname !== null) {
-      mysocket.findGame(args.roomname);
     }
   }, [gamestatus]);
 

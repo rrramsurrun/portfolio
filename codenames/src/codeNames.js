@@ -25,16 +25,16 @@ const CodeNames = ({ mysocket, game }) => {
     }
     if (mediaWatcher.addEventListener) {
       mediaWatcher.addEventListener("change", updateNarrowScreen);
-      return function cleanup() {
+      return () => {
         mediaWatcher.removeEventListener("change", updateNarrowScreen);
       };
     } else {
-      mediaWatcher.addListener(updateNarrowScreen);
-      return function cleanup() {
-        mediaWatcher.removeListener(updateNarrowScreen);
+      mediaWatcher.addEventListener(updateNarrowScreen);
+      return () => {
+        mediaWatcher.removeEventListener(updateNarrowScreen);
       };
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (leaveGameCheck) {
@@ -76,7 +76,7 @@ const CodeNames = ({ mysocket, game }) => {
       colour = "green";
     }
     return (
-      <div className={`playerdetails-plain`}>
+      <div className={`playerdetails-plain players-${colour}`}>
         <div className={`playertitle playertitle-${colour}`}>
           {game.playercount === 2
             ? "Spy"
@@ -190,9 +190,7 @@ const CodeNames = ({ mysocket, game }) => {
     if (game.playercount === 2 && game.win === null) {
       //Default a card to clickable, amend later
       clickable = game.turn + game.role === 3 ? true : false;
-      //Find user position in Revealed array
-      const userpos = game.role === 2 ? 1 : 0;
-      const otherpos = userpos === 1 ? 0 : 1;
+
       //Use a lighter shade for your own codex
       if (game.codex) {
         codexcolor =
@@ -686,7 +684,9 @@ const CodeNames = ({ mysocket, game }) => {
           </colgroup>
           <TableHead>
             <TableRow>
-              <TableCell align="left">Spy</TableCell>
+              <TableCell align="left">
+                {game.playercount === 2 ? `Spy` : `Spymaster`}
+              </TableCell>
               <TableCell align="left">Clue</TableCell>
               <TableCell align="left">To Find</TableCell>
               <TableCell align="left">Guesses Made</TableCell>
@@ -705,9 +705,7 @@ const CodeNames = ({ mysocket, game }) => {
                       // }}
                     >
                       <TableCell align="left">
-                        <Box className="guess guess--last">
-                          {game.nicknames[oldclue[0]]}
-                        </Box>
+                        {clueGiver(oldclue[0])}
                       </TableCell>
                       <TableCell align="left">
                         <Box className="guess guess--last">{oldclue[1]}</Box>
@@ -724,6 +722,17 @@ const CodeNames = ({ mysocket, game }) => {
           </TableBody>
         </Table>
       </TableContainer>
+    );
+  };
+  const clueGiver = (userPos) => {
+    let color = "green";
+    if (game.playercount === 4) {
+      color = userPos === 0 ? "red" : "blue";
+    }
+    return (
+      <Box className={`guess players-${color} playername`}>
+        {game.nicknames[userPos]}
+      </Box>
     );
   };
   return (
